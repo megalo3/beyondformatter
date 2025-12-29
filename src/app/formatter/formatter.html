@@ -1,0 +1,78 @@
+<div style="width: 500px">
+    <p>
+        <label>Attack Name </label>
+        <input [(ngModel)]="attackName" />
+    </p>
+    <p>
+        <label for="attackType">Range Type </label>
+        <select name="attackType" [(ngModel)]="attackType" multiple>
+            <option value="Ranged">Ranged</option>
+            <option value="Melee">Melee</option>
+        </select>
+    </p>
+    <p>
+        <label>To hit </label>
+        <input [(ngModel)]="toHit" type="number" />
+    </p>
+    <p>
+        <label>Reach </label>
+        <input [(ngModel)]="reach" type="number" />
+    </p>
+    <p>
+        <label>Range </label>
+        <input [(ngModel)]="rangeReach1" /> /
+        <input [(ngModel)]="rangeReach2" />
+    </p>
+    <p>
+        <label>Targets </label>
+        <input [(ngModel)]="targets" />
+    </p>
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Amount</th>
+            <th>Sides</th>
+            <th>Type</th>
+            <th>Bonus</th>
+        </tr>
+        @for (item of damages; track item.index) {
+            <tr>
+                <td>{{ item.index }}</td>
+                <td>
+                    <input [(ngModel)]="item.amount" type="number" />
+                </td>
+                <td>
+                    <select name="damageDie1Type" [(ngModel)]="item.sides">
+                        <option [value]="3">d3</option>
+                        <option [value]="4">d4</option>
+                        <option [value]="6">d6</option>
+                        <option [value]="8">d8</option>
+                        <option [value]="10">d10</option>
+                        <option [value]="12">d12</option>
+                    </select>
+                </td>
+                <td>
+                    <input [(ngModel)]="item.type" />
+                </td>
+                <td>
+                    <input [(ngModel)]="item.bonus" type="number" />
+                </td>
+            </tr>
+        }
+    </table>
+    <button (click)="addAttack()">Add</button>
+
+    <p>
+        <i
+            ><b>{{ attackName }}.</b> {{ attackTypeText }} Weapon Attack: </i
+        >[rollable]+{{ toHit }};&lcub;"diceNotation":"1d20+{{ toHit }}","rollType":"to
+        hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit, {{ reachText }},
+        {{ targets }}.
+        <i>Hit:</i>
+
+        @for (item of damages; track item.index) {
+            {{ getDamageMessage(item) }}
+        }
+        .
+    </p>
+</div>
