@@ -55,7 +55,7 @@ export class Formatter implements OnInit {
         'Wizard',
     ];
     pronouns = ['He/him', 'She/her', 'They/them'];
-    pronoun = 'He/him';
+    pronoun = 'They/them';
 
     get reachText(): string {
         let returnText = '';
@@ -250,7 +250,7 @@ export class Formatter implements OnInit {
     }
 
     get spellcastingAbility(): string {
-        switch(this.casterClass) {
+        switch (this.casterClass) {
             case 'Artificer':
             case 'Wizard':
             case 'Warlock':
