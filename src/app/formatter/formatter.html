@@ -65,6 +65,7 @@
                     <th scope="col">Sides</th>
                     <th scope="col">Type</th>
                     <th scope="col">Bonus</th>
+                    <th scope="col">Individual Markup</th>
                     <th></th>
                 </tr>
             </thead>
@@ -108,7 +109,77 @@
                                 </mat-form-field>
                             </td>
                             <td>
-                                <button matIconButton (click)="clear(i)">
+                                {{
+                                    getDamageMarkup(
+                                        damages.controls[i].get('amount')?.value,
+                                        damages.controls[i].get('sides')?.value,
+                                        damages.controls[i].get('bonus')?.value,
+                                        damages.controls[i].get('type')?.value
+                                    )
+                                }}
+                            </td>
+                            <td>
+                                <button matIconButton (click)="clearDamage(i)">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </ng-container>
+            </tbody>
+        </table>
+
+        <h3>Saves <button matButton="outlined" (click)="addSave()">Add</button></h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">DC</th>
+                    <th scope="col">Ability</th>
+                    <th scope="col">Effect</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container formArrayName="saves">
+                    @for (
+                        saveGroup of saves.controls;
+                        track saveGroup.get('id')?.value;
+                        let i = $index
+                    ) {
+                        <tr [formGroupName]="i">
+                            <td>
+                                <mat-form-field>
+                                    <mat-label>DC</mat-label>
+                                    <input matInput formControlName="dc" type="number" />
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field>
+                                    <mat-label>Abilty</mat-label>
+                                    <mat-select formControlName="ability">
+                                        <mat-option value="Strength">Strength</mat-option>
+                                        <mat-option value="Dexterity">Dexterity</mat-option>
+                                        <mat-option value="Constitution">Constitution</mat-option>
+                                        <mat-option value="Intelligence">Intelligence</mat-option>
+                                        <mat-option value="Wisdom">Wisdom</mat-option>
+                                        <mat-option value="Charisma">Charisma</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field>
+                                    <mat-label>Effect</mat-label>
+                                    <textarea
+                                        matInput
+                                        formControlName="effect"
+                                        rows="5"
+                                        cols="53"
+                                    ></textarea>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <button matIconButton (click)="clearSave(i)">
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </td>
@@ -128,7 +199,7 @@
             }}","rollType":"to hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit,
             {{ reachText }}, {{ attackForm.get('targets')?.value }}.
             <i>Hit:</i>
-            {{ damageMessages }}.
+            {{ damageMessages }}{{ saveMessages }}.
         </div>
     </div>
 </div>

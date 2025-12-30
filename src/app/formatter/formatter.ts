@@ -48,6 +48,10 @@ export class Formatter implements OnInit {
         return this.attackForm.get('damages') as FormArray;
     }
 
+    get saves(): FormArray {
+        return this.attackForm.get('saves') as FormArray;
+    }
+
     get attackName(): string {
         return this.attackForm.get('name')?.value;
     }
@@ -74,13 +78,13 @@ export class Formatter implements OnInit {
                     bonus: 5,
                 }),
             ]),
+            saves: this.fb.array([]),
         });
     }
 
     ngOnInit(): void {}
 
     addAttack() {
-        const index = this.damages.length;
         this.damages.push(
             this.fb.group({
                 id: crypto.randomUUID(),
@@ -96,8 +100,8 @@ export class Formatter implements OnInit {
         return Math.floor(((Number(die) + 1) / 2) * Number(amount)) + Number(bonus);
     }
 
-    getBonusText(bonus: number): string {
-        return !bonus ? '' : ` + ${bonus}`;
+    getBonusText(bonus: number, spaces = ' '): string {
+        return !bonus ? '' : `${spaces}+${spaces}${bonus}`;
     }
 
     get damageMessages(): string {
@@ -105,19 +109,51 @@ export class Formatter implements OnInit {
             const [amount, sides, bonus, type] = [
                 item.get('amount')?.value,
                 item.get('sides')?.value,
-                item.get('sides')?.value,
+                item.get('bonus')?.value,
                 item.get('type')?.value,
             ];
 
-            return (
-                this.getDamageAverage(amount, sides, bonus) +
-                ` [rollable](${amount}d${sides}${this.getBonusText(bonus)}); {"diceNotation":"${amount}d${sides}${this.getBonusText(bonus)}","rollType":"damage","rollAction":"${this.attackName}","rollDamageType":"${type}"}[/rollable] ${type} damage`
-            );
+            return this.getDamageMarkup(amount, sides, bonus, type);
         });
         return messages.join(' plus ');
     }
 
-    clear(index: number): void {
+    getDamageMarkup(amount: number, sides: number, bonus: number, type: string): string {
+        return (
+            this.getDamageAverage(amount, sides, bonus) +
+            ` [rollable](${amount}d${sides}${this.getBonusText(bonus)}); {"diceNotation":"${amount}d${sides}${this.getBonusText(bonus,'')}","rollType":"damage","rollAction":"${this.attackName}","rollDamageType":"${type}"}[/rollable] ${type} damage`
+        );
+    }
+
+    get saveMessages(): string {
+        const messages = this.saves.controls.map((item) => {
+            const [dc, ability, effect] = [
+                item.get('dc')?.value,
+                item.get('ability')?.value,
+                item.get('effect')?.value,
+            ];
+
+            return `, and the target must make a DC ${dc} ${ability} saving throw, ${effect}`;
+        });
+        return messages.join('. ');
+    }
+
+    clearDamage(index: number): void {
         this.damages.removeAt(index);
+    }
+
+    addSave() {
+        this.saves.push(
+            this.fb.group({
+                id: crypto.randomUUID(),
+                dc: 10,
+                ability: 'Constitution',
+                effect: 'taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one.',
+            }),
+        );
+    }
+
+    clearSave(index: number): void {
+        this.saves.removeAt(index);
     }
 }
