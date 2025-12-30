@@ -1,17 +1,15 @@
 <div class="container">
     <mat-tab-group animationDuration="0ms">
         <mat-tab label="Attack Markup">
-            <h1>D&D Beyond Markup Formatter</h1>
             <form [formGroup]="attackForm">
-                <div class="row">
+                <h3 style="margin-top: 24px;">Attack</h3>
+                <div class="row row-cols-auto">
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Attack Name</mat-label>
                             <input matInput type="text" formControlName="name" />
                         </mat-form-field>
                     </div>
-                </div>
-                <div class="row row-cols-auto">
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Attack Type</mat-label>
