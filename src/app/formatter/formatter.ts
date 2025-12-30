@@ -10,6 +10,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 interface Damage {
     id: string;
     amount: number;
@@ -26,12 +27,14 @@ interface Damage {
         MatIconModule,
         MatSelectModule,
         MatButtonModule,
+        MatTabsModule,
     ],
     templateUrl: './formatter.html',
     styleUrl: './formatter.scss',
 })
 export class Formatter implements OnInit {
     attackForm: FormGroup;
+    markupForm: FormGroup;
 
     get reachText(): string {
         let returnText = '';
@@ -80,6 +83,11 @@ export class Formatter implements OnInit {
             ]),
             saves: this.fb.array([]),
         });
+
+        this.markupForm = this.fb.group({
+            type: 'spell',
+            list: 'Mage Hand, Prestidigitation',
+        });
     }
 
     ngOnInit(): void {}
@@ -121,7 +129,7 @@ export class Formatter implements OnInit {
     getDamageMarkup(amount: number, sides: number, bonus: number, type: string): string {
         return (
             this.getDamageAverage(amount, sides, bonus) +
-            ` [rollable](${amount}d${sides}${this.getBonusText(bonus)}); {"diceNotation":"${amount}d${sides}${this.getBonusText(bonus,'')}","rollType":"damage","rollAction":"${this.attackName}","rollDamageType":"${type}"}[/rollable] ${type} damage`
+            ` [rollable](${amount}d${sides}${this.getBonusText(bonus)}); {"diceNotation":"${amount}d${sides}${this.getBonusText(bonus, '')}","rollType":"damage","rollAction":"${this.attackName}","rollDamageType":"${type}"}[/rollable] ${type} damage`
         );
     }
 
@@ -155,5 +163,11 @@ export class Formatter implements OnInit {
 
     clearSave(index: number): void {
         this.saves.removeAt(index);
+    }
+
+    get markupText(): string {
+        const [type, list] = [this.markupForm.get('type')?.value,this.markupForm.get('list')?.value];
+        const items = list.split(/\s*,\s*/).filter((item: string) => item.length > 0);
+        return items.length === 0 ? '' : `[${type}]` + items.join(`[/${type}], [${type}]`) + `[/${type}]`;
     }
 }
