@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "dndbeyond": {
+    "beyondformatter": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,6 +20,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath":"dist",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -61,16 +62,19 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "dndbeyond:build:production"
+              "buildTarget": "beyondformatter:build:production"
             },
             "development": {
-              "buildTarget": "dndbeyond:build:development"
+              "buildTarget": "beyondformatter:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
