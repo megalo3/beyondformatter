@@ -56,7 +56,7 @@
                     <div class="col"></div>
                 </div> -->
                 <div class="vertical-padding">
-                    <h3>Damage <button matButton="outlined" (click)="addAttack()">Add</button></h3>
+                    <h3>Damage ({{damagePerAttack}} per attack) <button matButton="outlined" (click)="addAttack()">Add</button></h3>
                     <ng-container formArrayName="damages">
                         @for (
                             damageGroup of damages.controls;

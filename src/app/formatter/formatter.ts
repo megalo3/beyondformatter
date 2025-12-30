@@ -104,6 +104,18 @@ export class Formatter implements OnInit {
         );
     }
 
+    get damagePerAttack(): number {
+        return this.damages.controls.reduce((accumulator, group) => {
+            return (
+                this.getDamageAverage(
+                    group.get('amount')?.value,
+                    group.get('sides')?.value,
+                    group.get('bonus')?.value,
+                ) + accumulator
+            );
+        }, 0);
+    }
+
     getDamageAverage(amount: number, die: number, bonus = 0): number {
         return Math.floor(((Number(die) + 1) / 2) * Number(amount)) + Number(bonus);
     }
