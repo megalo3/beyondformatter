@@ -1,285 +1,352 @@
 <div class="container">
-    <mat-tab-group animationDuration="0ms">
-        <mat-tab label="Attack Markup">
-            <form [formGroup]="attackForm">
-                <h3 style="margin-top: 24px;">Attack</h3>
-                <div class="row row-cols-auto">
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>Attack Name</mat-label>
-                            <input matInput type="text" formControlName="name" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>Attack Type</mat-label>
-                            <mat-select formControlName="type">
-                                <mat-option value="Melee">Melee</mat-option>
-                                <mat-option value="Ranged">Ranged</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>To Hit</mat-label>
-                            <input matInput formControlName="toHit" type="number" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col">
-                        @if (attackType === 'Melee') {
-                            <mat-form-field>
-                                <mat-label>Reach</mat-label>
-                                <input matInput formControlName="reach" type="number" />
-                            </mat-form-field>
-                        } @else {
-                            <mat-form-field>
-                                <mat-label>Range</mat-label>
-                                <input matInput formControlName="range" type="number" />
-                            </mat-form-field>
-                            /
-                            <mat-form-field>
-                                <mat-label>Range Disadvantage</mat-label>
-                                <input matInput formControlName="rangeDisadvantage" type="number" />
-                            </mat-form-field>
-                        }
-                    </div>
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>Targets</mat-label>
-                            <input matInput formControlName="targets" type="text" />
-                        </mat-form-field>
-                    </div>
+    <div class="section">
+        <div class="row">
+            <div class="col">
+                <h3>Attack Markup</h3>
+                <i
+                    ><b>{{ attackName }}.</b> {{ attackType }} Weapon Attack: </i
+                >[rollable]+{{ attackForm.get('toHit')?.value }};&lcub;"diceNotation":"1d20+{{
+                    attackForm.get('toHit')?.value
+                }}","rollType":"to hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit,
+                {{ reachText }}, {{ attackForm.get('targets')?.value }}.
+                <i>Hit:</i>
+                {{ damageMessages }}{{ saveMessages }}.
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="attackForm">
+        <div class="section">
+            <h3>Attack</h3>
+            <div class="row row-cols-auto">
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Attack Name</mat-label>
+                        <input matInput type="text" formControlName="name" />
+                    </mat-form-field>
                 </div>
-                <!-- <div class="row row-cols-auto">
-                    <div class="col"></div>
-                    <div class="col"></div>
-                    <div class="col"></div>
-                </div> -->
-                <div class="vertical-padding">
-                    <h3>Damage ({{damagePerAttack}} per attack) <button matButton="outlined" (click)="addAttack()">Add</button></h3>
-                    <ng-container formArrayName="damages">
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Attack Type</mat-label>
+                        <mat-select formControlName="type">
+                            <mat-option value="Melee">Melee</mat-option>
+                            <mat-option value="Ranged">Ranged</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>To Hit</mat-label>
+                        <input matInput formControlName="toHit" type="number" />
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    @if (attackType === 'Melee') {
+                        <mat-form-field>
+                            <mat-label>Reach</mat-label>
+                            <input matInput formControlName="reach" type="number" />
+                        </mat-form-field>
+                    } @else {
+                        <mat-form-field>
+                            <mat-label>Range</mat-label>
+                            <input matInput formControlName="range" type="number" />
+                        </mat-form-field>
+                        /
+                        <mat-form-field>
+                            <mat-label>Range Disadvantage</mat-label>
+                            <input matInput formControlName="rangeDisadvantage" type="number" />
+                        </mat-form-field>
+                    }
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Targets</mat-label>
+                        <input matInput formControlName="targets" type="text" />
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h3>
+                Damage ({{ damagePerAttack }} per attack)
+                <button matButton="outlined" (click)="addAttack()">Add</button>
+            </h3>
+            <ng-container formArrayName="damages">
+                @for (
+                    damageGroup of damages.controls;
+                    track damageGroup.get('id')?.value;
+                    let i = $index
+                ) {
+                    <ng-container [formGroupName]="i">
+                        <div class="row row-cols-auto">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Amount</mat-label>
+                                    <input matInput formControlName="amount" type="number" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Die Sides</mat-label>
+                                    <mat-select formControlName="sides">
+                                        <mat-option [value]="3">d3</mat-option>
+                                        <mat-option [value]="4">d4</mat-option>
+                                        <mat-option [value]="6">d6</mat-option>
+                                        <mat-option [value]="8">d8</mat-option>
+                                        <mat-option [value]="10">d10</mat-option>
+                                        <mat-option [value]="12">d12</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Damage Type</mat-label>
+                                    <input matInput formControlName="type" type="text" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Damage Bonus</mat-label>
+                                    <input matInput formControlName="bonus" type="number" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <button matIconButton (click)="clearDamage(i)">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="markup">
+                                    {{
+                                        getDamageMarkup(
+                                            damages.controls[i].get('amount')?.value,
+                                            damages.controls[i].get('sides')?.value,
+                                            damages.controls[i].get('bonus')?.value,
+                                            damages.controls[i].get('type')?.value
+                                        )
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                }
+            </ng-container>
+        </div>
+        <div class="section">
+            <h3>Saves <button matButton="outlined" (click)="addSave()">Add</button></h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">DC</th>
+                        <th scope="col">Ability</th>
+                        <th scope="col">Effect</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container formArrayName="saves">
                         @for (
-                            damageGroup of damages.controls;
-                            track damageGroup.get('id')?.value;
+                            saveGroup of saves.controls;
+                            track saveGroup.get('id')?.value;
                             let i = $index
                         ) {
-                            <ng-container [formGroupName]="i">
-                                <div class="row row-cols-auto">
-                                    <div class="col">
-                                        <mat-form-field>
-                                            <mat-label>Amount</mat-label>
-                                            <input
-                                                matInput
-                                                formControlName="amount"
-                                                type="number"
-                                            />
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col">
-                                        <mat-form-field>
-                                            <mat-label>Die Sides</mat-label>
-                                            <mat-select formControlName="sides">
-                                                <mat-option [value]="3">d3</mat-option>
-                                                <mat-option [value]="4">d4</mat-option>
-                                                <mat-option [value]="6">d6</mat-option>
-                                                <mat-option [value]="8">d8</mat-option>
-                                                <mat-option [value]="10">d10</mat-option>
-                                                <mat-option [value]="12">d12</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col">
-                                        <mat-form-field>
-                                            <mat-label>Damage Type</mat-label>
-                                            <input matInput formControlName="type" type="text" />
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col">
-                                        <mat-form-field>
-                                            <mat-label>Damage Bonus</mat-label>
-                                            <input matInput formControlName="bonus" type="number" />
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col">
-                                        <button matIconButton (click)="clearDamage(i)">
-                                            <mat-icon>close</mat-icon>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div style="margin-bottom: 24px; margin-top: -12px">
-                                            <textarea style="width: 100%; text-align: left">{{
-                                                getDamageMarkup(
-                                                    damages.controls[i].get('amount')?.value,
-                                                    damages.controls[i].get('sides')?.value,
-                                                    damages.controls[i].get('bonus')?.value,
-                                                    damages.controls[i].get('type')?.value
-                                                )
-                                            }}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-container>
+                            <tr [formGroupName]="i">
+                                <td>
+                                    <mat-form-field>
+                                        <mat-label>DC</mat-label>
+                                        <input matInput formControlName="dc" type="number" />
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field>
+                                        <mat-label>Abilty</mat-label>
+                                        <mat-select formControlName="ability">
+                                            <mat-option value="Strength">Strength</mat-option>
+                                            <mat-option value="Dexterity">Dexterity</mat-option>
+                                            <mat-option value="Constitution"
+                                                >Constitution</mat-option
+                                            >
+                                            <mat-option value="Intelligence"
+                                                >Intelligence</mat-option
+                                            >
+                                            <mat-option value="Wisdom">Wisdom</mat-option>
+                                            <mat-option value="Charisma">Charisma</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field>
+                                        <mat-label>Effect</mat-label>
+                                        <textarea
+                                            matInput
+                                            formControlName="effect"
+                                            rows="5"
+                                            cols="53"
+                                        ></textarea>
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <button matIconButton (click)="clearSave(i)">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
                         }
                     </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <div class="section">
+        <h3>Markup List</h3>
+        <form [formGroup]="markupForm">
+            <div class="row">
+                <div class="col col-lg-8 col-md-8">
+                    <mat-form-field style="width: 100%">
+                        <mat-label>Markup Type</mat-label>
+                        <mat-select formControlName="type">
+                            <mat-option value="action"
+                                >action - an action taken in combat - e.g. dodge, search and
+                                ready</mat-option
+                            >
+                            <mat-option value="condition"
+                                >condition - a condition afflicted upon a creature - e.g.
+                                restrained, poisoned and prone</mat-option
+                            >
+                            <mat-option value="item"
+                                >item - a mundane item - e.g. torch, trident and
+                                backpack</mat-option
+                            >
+                            <mat-option value="magicItem"
+                                >magicItem - a magical item - e.g. Bag of Holding, Dust of
+                                Disappearance and Demon Armor</mat-option
+                            >
+                            <mat-option value="monster"
+                                >monster - a creature you can encounter - e.g. Banshee, Bandit and
+                                Unicorn</mat-option
+                            >
+                            <mat-option value="sense"
+                                >sense - a type of extra sense, whether magical or natural - e.g.
+                                darkvision, tremorsense and truesight</mat-option
+                            >
+                            <mat-option value="skill"
+                                >skill - this is used for professions - e.g. Persuasion,
+                                Stealth</mat-option
+                            >
+                            <mat-option value="spell"
+                                >spell - a magical spell - e.g. Mage Hand, Magic Missile and
+                                Abi-Dalzim's Horrid Wilting</mat-option
+                            >
+                            <mat-option value="wprop"
+                                >wprop - a property of a weapon - e.g. finesse, versatile and
+                                heavy</mat-option
+                            >
+                        </mat-select>
+                    </mat-form-field>
                 </div>
-
-                <div class="vertical-padding">
-                    <h3>Saves <button matButton="outlined" (click)="addSave()">Add</button></h3>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th scope="col">DC</th>
-                                <th scope="col">Ability</th>
-                                <th scope="col">Effect</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container formArrayName="saves">
-                                @for (
-                                    saveGroup of saves.controls;
-                                    track saveGroup.get('id')?.value;
-                                    let i = $index
-                                ) {
-                                    <tr [formGroupName]="i">
-                                        <td>
-                                            <mat-form-field>
-                                                <mat-label>DC</mat-label>
-                                                <input
-                                                    matInput
-                                                    formControlName="dc"
-                                                    type="number"
-                                                />
-                                            </mat-form-field>
-                                        </td>
-                                        <td>
-                                            <mat-form-field>
-                                                <mat-label>Abilty</mat-label>
-                                                <mat-select formControlName="ability">
-                                                    <mat-option value="Strength"
-                                                        >Strength</mat-option
-                                                    >
-                                                    <mat-option value="Dexterity"
-                                                        >Dexterity</mat-option
-                                                    >
-                                                    <mat-option value="Constitution"
-                                                        >Constitution</mat-option
-                                                    >
-                                                    <mat-option value="Intelligence"
-                                                        >Intelligence</mat-option
-                                                    >
-                                                    <mat-option value="Wisdom">Wisdom</mat-option>
-                                                    <mat-option value="Charisma"
-                                                        >Charisma</mat-option
-                                                    >
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                        <td>
-                                            <mat-form-field>
-                                                <mat-label>Effect</mat-label>
-                                                <textarea
-                                                    matInput
-                                                    formControlName="effect"
-                                                    rows="5"
-                                                    cols="53"
-                                                ></textarea>
-                                            </mat-form-field>
-                                        </td>
-                                        <td>
-                                            <button matIconButton (click)="clearSave(i)">
-                                                <mat-icon>close</mat-icon>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                }
-                            </ng-container>
-                        </tbody>
-                    </table>
-                </div>
-            </form>
-
-            <div class="row vertical-padding markup">
                 <div class="col">
-                    <i
-                        ><b>{{ attackName }}.</b> {{ attackType }} Weapon Attack: </i
-                    >[rollable]+{{ attackForm.get('toHit')?.value }};&lcub;"diceNotation":"1d20+{{
-                        attackForm.get('toHit')?.value
-                    }}","rollType":"to hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit,
-                    {{ reachText }}, {{ attackForm.get('targets')?.value }}.
-                    <i>Hit:</i>
-                    {{ damageMessages }}{{ saveMessages }}.
+                    <mat-form-field style="width: 100%">
+                        <textarea
+                            matInput
+                            formControlName="list"
+                            rows="5"
+                            cols="53"
+                            placeholder="comma, separated, list"
+                        ></textarea>
+                    </mat-form-field>
                 </div>
             </div>
-        </mat-tab>
-        <mat-tab label="Markup List">
-            <div class="vertical-padding">
-                <h3>Markup List</h3>
-                <form [formGroup]="markupForm">
-                    <div class="row">
-                        <div class="col col-lg-8 col-md-8">
-                            <mat-form-field style="width: 100%">
-                                <mat-label>Markup Type</mat-label>
-                                <mat-select formControlName="type">
-                                    <mat-option value="action"
-                                        >action - an action taken in combat - e.g. dodge, search and
-                                        ready</mat-option
-                                    >
-                                    <mat-option value="condition"
-                                        >condition - a condition afflicted upon a creature - e.g.
-                                        restrained, poisoned and prone</mat-option
-                                    >
-                                    <mat-option value="item"
-                                        >item - a mundane item - e.g. torch, trident and
-                                        backpack</mat-option
-                                    >
-                                    <mat-option value="magicItem"
-                                        >magicItem - a magical item - e.g. Bag of Holding, Dust of
-                                        Disappearance and Demon Armor</mat-option
-                                    >
-                                    <mat-option value="monster"
-                                        >monster - a creature you can encounter - e.g. Banshee,
-                                        Bandit and Unicorn</mat-option
-                                    >
-                                    <mat-option value="sense"
-                                        >sense - a type of extra sense, whether magical or natural -
-                                        e.g. darkvision, tremorsense and truesight</mat-option
-                                    >
-                                    <mat-option value="skill"
-                                        >skill - this is used for professions - e.g. Persuasion,
-                                        Stealth</mat-option
-                                    >
-                                    <mat-option value="spell"
-                                        >spell - a magical spell - e.g. Mage Hand, Magic Missile and
-                                        Abi-Dalzim's Horrid Wilting</mat-option
-                                    >
-                                    <mat-option value="wprop"
-                                        >wprop - a property of a weapon - e.g. finesse, versatile
-                                        and heavy</mat-option
-                                    >
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col">
-                            <mat-form-field style="width: 100%">
-                                <textarea
-                                    matInput
-                                    formControlName="list"
-                                    rows="5"
-                                    cols="53"
-                                    placeholder="comma, separated, list"
-                                ></textarea>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col markup">{{ markupText }}</div>
-                    </div>
-                </form>
+            <div class="row">
+                <div class="col markup">{{ markupText }}</div>
             </div>
-        </mat-tab>
-    </mat-tab-group>
+        </form>
+    </div>
+
+    <div class="section">
+        <h3>Spells</h3>
+        <div class="row row-cols-auto">
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Monster Name</mat-label>
+                    <input matInput type="text" [(ngModel)]="monster" />
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Pronoun</mat-label>
+                    <mat-select [(ngModel)]="pronoun">
+                        @for (pronoun of pronouns; track pronoun; let i = $index) {
+                            <mat-option [value]="pronoun">{{ pronoun }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Challenge Rating</mat-label>
+                    <input matInput type="text" [(ngModel)]="cr" />
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Caster Class</mat-label>
+                    <mat-select [(ngModel)]="casterClass">
+                        @for (cl of classes; track cl; let i = $index) {
+                            <mat-option [value]="cl">{{ cl }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Ability Score</mat-label>
+                    <input matInput type="number" [(ngModel)]="abilityScore" />
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row row-cols-auto">
+            <div class="col">
+                <b><i>Spellcasting.</i></b> {{ spellcastingText }}
+                <br />
+                <br />
+                <b>Cantrips (at will):</b> Spell
+                <br />
+                <br />
+                <b>1st level (4 slots):</b> Spell
+                <br />
+                <br />
+                <b>2nd level (3 slots):</b> Spell
+                <br />
+                <br />
+                <b>3rd level (3 slots):</b> Spell
+                <br />
+                <br />
+                <b>4th level (3 slots):</b> Spell
+                <br />
+                <br />
+                <b>5th level (2 slots):</b> Spell
+                <br />
+                <br />
+                <b>6th level (1 slot):</b> Spell
+                <br />
+                <br />
+                <b>At Will:</b> Spell
+                <br />
+                <br />
+                <b> 1/Day Each:</b> Spell
+                <br />
+                <br />
+                <b> 2/Day Each:</b> Spell
+                <br />
+                <br />
+                <b> 3/Day Each:</b> Spell
+            </div>
+        </div>
+    </div>
 </div>
+<div style="height: 1px"></div>

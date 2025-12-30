@@ -35,6 +35,27 @@ interface Damage {
 export class Formatter implements OnInit {
     attackForm: FormGroup;
     markupForm: FormGroup;
+    monster = 'Monster';
+    cr = 1;
+    abilityScore = 1;
+    casterClass = 'Wizard';
+    classes = [
+        'Artificer',
+        'Barbarian',
+        'Bard',
+        'Cleric',
+        'Druid',
+        'Fighter',
+        'Monk',
+        'Paladin',
+        'Ranger',
+        'Rogue',
+        'Sorcerer',
+        'Warlock',
+        'Wizard',
+    ];
+    pronouns = ['He/him', 'She/her', 'They/them'];
+    pronoun = 'He/him';
 
     get reachText(): string {
         let returnText = '';
@@ -178,8 +199,75 @@ export class Formatter implements OnInit {
     }
 
     get markupText(): string {
-        const [type, list] = [this.markupForm.get('type')?.value,this.markupForm.get('list')?.value];
+        const [type, list] = [
+            this.markupForm.get('type')?.value,
+            this.markupForm.get('list')?.value,
+        ];
         const items = list.split(/\s*,\s*/).filter((item: string) => item.length > 0);
-        return items.length === 0 ? '' : `[${type}]` + items.join(`[/${type}], [${type}]`) + `[/${type}]`;
+        return items.length === 0
+            ? ''
+            : `[${type}]` + items.join(`[/${type}], [${type}]`) + `[/${type}]`;
+    }
+
+    getNumberString(n: number): string {
+        if (!n) {
+            return '0th';
+        }
+        if (n === 1) {
+            return '1st';
+        }
+        if (n === 2) {
+            return '2nd';
+        }
+        return `${n}th`;
+    }
+
+    getProficiency(cr: number): number {
+        return Math.ceil(cr / 4) + 1;
+    }
+
+    getAbilityMod(n: number): number {
+        const calc = (n - 10) / 2;
+        return Math.floor(calc);
+    }
+
+    get dc(): number {
+        return 10 + this.getProficiency(this.cr) + this.getAbilityMod(this.abilityScore);
+    }
+
+    get spellAttack(): number {
+        return this.dc - 10;
+    }
+
+    get pronounPosessive(): string {
+        switch (this.pronoun) {
+            case 'He/him':
+                return 'His';
+            case 'She/her':
+                return 'Hers';
+        }
+        return 'Their';
+    }
+
+    get spellcastingAbility(): string {
+        switch(this.casterClass) {
+            case 'Artificer':
+            case 'Wizard':
+            case 'Warlock':
+                return 'Intelligence';
+            case 'Bard':
+            case 'Paladin':
+            case 'Sorcerer':
+                return 'Charisma';
+            case 'Cleric':
+            case 'Druid':
+            case 'Ranger':
+                return 'Wisdom';
+        }
+        return 'Intelligence';
+    }
+
+    get spellcastingText(): string {
+        return `${this.monster} is a ${this.getNumberString(this.cr)}-level spellcaster. ${this.pronounPosessive} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.monster} has the following ${this.casterClass} spells prepared:`;
     }
 }

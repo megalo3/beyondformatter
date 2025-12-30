@@ -1,12 +1,13 @@
-.vertical-padding {
-    margin: 24px 0;
+.section {
+    border: 1px solid #ccc;
+    background: rgba(14,14,14,.02);
+    padding: 24px;
+    margin: 36px 0;
 }
 .markup {
     border: 1px solid #ccc;
+    background: rgba(14,14,14,.02);
+    margin-top: -12px;
+    margin-bottom: 24px;
     padding: 12px;
-    border-radius: 2px;
-}
-.row {
-    margin-right: 0;
-    margin-left: 0;
 }
