@@ -36,8 +36,8 @@ export class Formatter implements OnInit {
     attackForm: FormGroup;
     markupForm: FormGroup;
     monster = 'Monster';
-    cr = 1;
-    abilityScore = 1;
+    cr = 7;
+    abilityScore = 18;
     casterClass = 'Wizard';
     classes = [
         'Artificer',
