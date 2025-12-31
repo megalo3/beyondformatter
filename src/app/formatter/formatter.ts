@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import { npcChart } from './npc-chart';
 interface Damage {
     id: string;
     amount: number;
@@ -267,7 +268,11 @@ export class Formatter implements OnInit {
         return 'Intelligence';
     }
 
+    getSpellLevelFromCr(cr: number): number {
+        return npcChart.find((c) => c.CR === cr)?.SpellLevel || 1;
+    }
+
     get spellcastingText(): string {
-        return `${this.monster} is a ${this.getNumberString(this.cr)}-level spellcaster. ${this.pronounPosessive} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.monster} has the following ${this.casterClass} spells prepared:`;
+        return `${this.monster} is a ${this.getNumberString(this.getSpellLevelFromCr(this.cr))}-level spellcaster. ${this.pronounPosessive} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.monster} has the following ${this.casterClass} spells prepared:`;
     }
 }
