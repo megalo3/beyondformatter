@@ -1,19 +1,71 @@
 <br />
 <br />
+<p>
+    Changing the CR will change all other values to the CR average. Changing the other sliders will
+    update the "Points to Spend" to match the current CR.
+</p>
 <form [formGroup]="monsterForm">
     <div class="container">
+        <h3>CR</h3>
         <app-monster-slider name="cr" label="CR" [min]="0" [max]="30" (change)="crChange()" />
-        <app-monster-slider name="points" label="Points to Spend" [min]="24" [max]="170" />
-        <hr>
-        <app-monster-slider name="ac" label="AC" [min]="12" [max]="23" />
-        <app-monster-slider name="hp" label="Hit Points" [min]="1" [max]="500" />
-        <app-monster-slider name="dmg" label="Damage/Round" [min]="1" [max]="200" />
-        <app-monster-slider name="hit" label="To Hit" [min]="3" [max]="28" />
-        <app-monster-slider name="dc" label="DC" [min]="10" [max]="30" />
-        <hr>
-        <app-monster-slider name="level" label="Level" [min]="0" [max]="20" />
-        <app-monster-slider name="proficiency" label="Proficiency" [min]="2" [max]="9" />
-        <app-monster-slider name="spellHit" label="Spell To Hit" [min]="2" [max]="20" />
-        <app-monster-slider name="spellLevel" label="Spell Level" [min]="0" [max]="9" />
+        <div class="row undisabled">
+            <div class="col-3">
+                <mat-form-field style="width: 100%">
+                    <mat-label>Level</mat-label>
+                    <input matInput formControlName="level" type="number" />
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field style="width: 100%">
+                    <mat-label>Proficiency</mat-label>
+                    <input matInput formControlName="proficiency" type="number" />
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field style="width: 100%">
+                    <mat-label>Spell To Hit</mat-label>
+                    <input matInput formControlName="spellHit" type="number" />
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field style="width: 100%">
+                    <mat-label>Spell Level</mat-label>
+                    <input matInput formControlName="spellLevel" type="number" />
+                </mat-form-field>
+            </div>
+        </div>
+        <hr />
+        <h3>Stat Balancing</h3>
+        <div class="row undisabled">
+            <div class="col-2">
+                <mat-form-field style="width: 100%">
+                    <mat-label>Points to Spend</mat-label>
+                    <input matInput formControlName="points" type="number" />
+                </mat-form-field>
+            </div>
+        </div>
+        <app-monster-slider name="ac" label="AC" [min]="12" [max]="23" (change)="statChange()" />
+        <app-monster-slider
+            name="hp"
+            label="Hit Points"
+            [min]="1"
+            [max]="500"
+            (change)="statChange()"
+        />
+        <app-monster-slider
+            name="dmg"
+            label="Damage/Round"
+            [min]="1"
+            [max]="200"
+            (change)="statChange()"
+        />
+        <app-monster-slider
+            name="hit"
+            label="To Hit"
+            [min]="3"
+            [max]="28"
+            (change)="statChange()"
+        />
+        <app-monster-slider name="dc" label="DC" [min]="10" [max]="30" (change)="statChange()" />
     </div>
 </form>

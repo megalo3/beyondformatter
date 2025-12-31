@@ -30,22 +30,48 @@ export class MonsterStats {
     constructor(private fb: FormBuilder) {
         this.monsterForm = this.fb.group({
             cr: 10,
-            level: 17,
-            proficiency: 4,
+            points: { value: 0, disabled: true },
+            level: { value: 17, disabled: true },
+            proficiency: { value: 4, disabled: true },
+            spellHit: { value: 8, disabled: true },
+            spellLevel: { value: 6, disabled: true },
             ac: 16,
             hp: 165,
             dmg: 66,
             hit: 9,
             dc: 16,
-            spellHit: 8,
-            spellLevel: 6,
-            points: 73,
         });
     }
 
     crChange() {
-        const values: Monster | {} = npcChart.find((c) => c.cr === this.monsterForm.value.cr) || {};
-        console.log(values);
+        const values: Monster = {
+            ...this.chartStats,
+            points: 0,
+        };
         this.monsterForm.patchValue(values);
+    }
+
+    get chartStats(): Monster {
+        return npcChart.find((c) => c.cr === this.monsterForm.value.cr) || {};
+    }
+
+    statChange() {
+        const chartStats = this.chartStats;
+        const hpPoints = (Number(chartStats.hp) - this.monsterForm.value.hp) / 7.5;
+        const acPoints = Number(chartStats.ac) - this.monsterForm.value.ac;
+        const dmgPoints = (Number(chartStats.dmg) - this.monsterForm.value.dmg) / 3;
+        const hitAcPoints =
+            (Number(chartStats.hit) +
+                Number(chartStats.dc) -
+                (this.monsterForm.value.hit + this.monsterForm.value.dc)) /
+            2;
+        const points =
+            Math.trunc(hpPoints) +
+            Math.trunc(acPoints) +
+            Math.trunc(dmgPoints) +
+            Math.trunc(hitAcPoints);
+        this.monsterForm.patchValue({
+            points,
+        });
     }
 }

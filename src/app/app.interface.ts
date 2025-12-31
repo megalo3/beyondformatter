@@ -6,15 +6,15 @@ export interface Damage {
     type: string;
 }
 export interface Monster {
-    cr: number;
-    level: number;
-    proficiency: number;
-    ac: number;
-    hp: number;
-    dmg: number;
-    hit: number;
-    dc: number;
-    spellHit: number;
-    spellLevel: number;
-    points: number;
+    cr?: number;
+    level?: number;
+    proficiency?: number;
+    ac?: number;
+    hp?: number;
+    dmg?: number;
+    hit?: number;
+    dc?: number;
+    spellHit?: number;
+    spellLevel?: number;
+    points?: number;
 }

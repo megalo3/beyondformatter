@@ -1,0 +1,8 @@
+::ng-deep .undisabled {
+    .mdc-text-field--filled.mdc-text-field--disabled .mdc-floating-label {
+        color: var(--mat-sys-on-surface-variant) !important;
+    }
+    .mdc-text-field--filled.mdc-text-field--disabled .mdc-text-field__input {
+        color: var(--mat-sys-on-surface) !important;
+    }
+}
