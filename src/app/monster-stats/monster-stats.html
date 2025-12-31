@@ -7,7 +7,14 @@
 <form [formGroup]="monsterForm">
     <div class="container">
         <h3>CR</h3>
+        Partial CR:
+        <mat-radio-group aria-label="Partial CR" formControlName="partialCr" (change)="partialCrChange()">
+            <mat-radio-button [value]="0.125">1/8</mat-radio-button>
+            <mat-radio-button [value]="0.25">1/4</mat-radio-button>
+            <mat-radio-button [value]="0.5">1/2</mat-radio-button>
+        </mat-radio-group>
         <app-monster-slider name="cr" label="CR" [min]="0" [max]="30" (change)="crChange()" />
+
         <div class="row undisabled">
             <div class="col-4">
                 <mat-form-field style="width: 100%">
@@ -38,7 +45,7 @@
                 </mat-form-field>
             </div>
         </div>
-        <app-monster-slider name="ac" label="AC" [min]="12" [max]="23" (change)="statChange()" />
+        <app-monster-slider name="ac" label="AC" [min]="12" [max]="25" (change)="statChange()" />
         <app-monster-slider
             name="hp"
             label="Hit Points"

@@ -21,6 +21,7 @@ export class MonsterSlider implements OnInit {
     @Input() min = 0;
     @Input() max = 30;
     @Input() label = '';
+    @Input() step = 1;
 
     control: FormControl;
 

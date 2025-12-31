@@ -6,6 +6,7 @@ export interface Damage {
     type: string;
 }
 export interface Monster {
+    partialCr?: number;
     cr?: number;
     level?: number;
     proficiency?: number;
