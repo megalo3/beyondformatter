@@ -1,0 +1,19 @@
+<br />
+<br />
+<form [formGroup]="monsterForm">
+    <div class="container">
+        <app-monster-slider name="cr" label="CR" [min]="0" [max]="30" (change)="crChange()" />
+        <app-monster-slider name="points" label="Points to Spend" [min]="24" [max]="170" />
+        <hr>
+        <app-monster-slider name="ac" label="AC" [min]="12" [max]="23" />
+        <app-monster-slider name="hp" label="Hit Points" [min]="1" [max]="500" />
+        <app-monster-slider name="dmg" label="Damage/Round" [min]="1" [max]="200" />
+        <app-monster-slider name="hit" label="To Hit" [min]="3" [max]="28" />
+        <app-monster-slider name="dc" label="DC" [min]="10" [max]="30" />
+        <hr>
+        <app-monster-slider name="level" label="Level" [min]="0" [max]="20" />
+        <app-monster-slider name="proficiency" label="Proficiency" [min]="2" [max]="9" />
+        <app-monster-slider name="spellHit" label="Spell To Hit" [min]="2" [max]="20" />
+        <app-monster-slider name="spellLevel" label="Spell Level" [min]="0" [max]="9" />
+    </div>
+</form>

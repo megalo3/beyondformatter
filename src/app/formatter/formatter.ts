@@ -10,15 +10,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
-import { npcChart } from './npc-chart';
-interface Damage {
-    id: string;
-    amount: number;
-    sides: number;
-    bonus: number;
-    type: string;
-}
+import { npcChart } from '../npc-chart';
+
 @Component({
     selector: 'app-formatter',
     imports: [
@@ -28,7 +21,6 @@ interface Damage {
         MatIconModule,
         MatSelectModule,
         MatButtonModule,
-        MatTabsModule,
     ],
     templateUrl: './formatter.html',
     styleUrl: './formatter.scss',
@@ -269,7 +261,7 @@ export class Formatter implements OnInit {
     }
 
     getSpellLevelFromCr(cr: number): number {
-        return npcChart.find((c) => c.CR === cr)?.SpellLevel || 1;
+        return npcChart.find((c) => c.cr === cr)?.spellLevel || 1;
     }
 
     get spellcastingText(): string {

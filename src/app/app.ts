@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { Formatter } from './formatter/formatter';
+import { RouterOutlet } from '@angular/router';
+import { Menu } from './menu/menu';
 
 @Component({
     selector: 'app-root',
-    imports: [Formatter],
+    imports: [RouterOutlet, Menu],
     templateUrl: './app.html',
     styleUrl: './app.scss',
 })
