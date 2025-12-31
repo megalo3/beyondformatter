@@ -57,13 +57,14 @@ export class MonsterStats {
 
     statChange() {
         const chartStats = this.chartStats;
-        const hpPoints = (Number(chartStats.hp) - this.monsterForm.value.hp) / 7.5;
-        const acPoints = Number(chartStats.ac) - this.monsterForm.value.ac;
-        const dmgPoints = (Number(chartStats.dmg) - this.monsterForm.value.dmg) / 3;
+        const current = this.monsterForm.value;
+        const hpPoints = (Number(chartStats.hp) - current.hp) / 7.5;
+        const acPoints = Number(chartStats.ac) - current.ac;
+        const dmgPoints = (Number(chartStats.dmg) - current.dmg) / 3;
         const hitAcPoints =
             (Number(chartStats.hit) +
                 Number(chartStats.dc) -
-                (this.monsterForm.value.hit + this.monsterForm.value.dc)) /
+                (current.hit + current.dc)) /
             2;
         const points =
             Math.trunc(hpPoints) +
@@ -72,6 +73,7 @@ export class MonsterStats {
             Math.trunc(hitAcPoints);
         this.monsterForm.patchValue({
             points,
+            spellHit: current.hit - 1
         });
     }
 }
