@@ -2,8 +2,20 @@
 <br />
 <p>
     Changing the CR will change all other values to the CR average. Changing the other sliders will
-    update the "Points to Spend" to match the current CR.
+    update the "Points to Spend" to match the current CR. Changing sliders more than a couple points will severly imbalance the challenge rating.
 </p>
+<p>
+    A balanced but challenging encounter should be approximately half the sum of the party's levels in CR. Example: 4 level 10 PCs should be able to fight 1 level 20 CR creature or 2 level 10 CR creatures.
+</p>
+<div>
+    This calculates 1 point per:
+    <ul>
+        <li>7.5 hp</li>
+        <li>3 damage</li>
+        <li>1 ac</li>
+        <li>(1 to hit + 1 dc) / 2</li>
+    </ul>
+</div>
 <form [formGroup]="monsterForm">
     <div class="container">
         <h3>CR</h3>
@@ -51,30 +63,29 @@
             label="Hit Points"
             [min]="1"
             [max]="500"
-            (change)="statChange()"
+            (change)="statChange('hp')"
         />
         <app-monster-slider
             name="hit"
             label="To Hit"
             [min]="3"
             [max]="28"
-            (change)="statChange()"
+            (change)="statChange('hit')"
         />
-        <div class="row undisabled">
-            <div class="col-2">
-                <mat-form-field style="width: 100%">
-                    <mat-label>Spell To Hit</mat-label>
-                    <input matInput formControlName="spellHit" type="number" />
-                </mat-form-field>
-            </div>
-        </div>
+        <app-monster-slider
+            name="spellHit"
+            label="Spell To Hit"
+            [min]="2"
+            [max]="27"
+            (change)="statChange('spellHit')"
+        />
         <app-monster-slider
             name="dmg"
             label="Damage/Round"
             [min]="1"
             [max]="200"
-            (change)="statChange()"
+            (change)="statChange('dmg')"
         />
-        <app-monster-slider name="dc" label="DC" [min]="10" [max]="30" (change)="statChange()" />
+        <app-monster-slider name="dc" label="DC" [min]="10" [max]="30" (change)="statChange('dc')" />
     </div>
 </form>

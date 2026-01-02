@@ -36,17 +36,19 @@ export class MonsterStats {
             points: { value: 0, disabled: true },
             level: { value: 17, disabled: true },
             proficiency: { value: 4, disabled: true },
-            spellHit: { value: 8, disabled: true },
             spellLevel: { value: 6, disabled: true },
             ac: 16,
             hp: 165,
             dmg: 66,
             hit: 9,
+            spellHit: 8,
             dc: 16,
         });
     }
 
     crChange() {
+        this.monsterForm.get('spellHit')?.enable();
+        this.monsterForm.get('hit')?.enable();
         this.monsterForm.patchValue({ partialCr: 0 });
         const values: Monster = {
             ...this.chartStats,
@@ -57,37 +59,52 @@ export class MonsterStats {
 
     partialCrChange() {
         this.monsterForm.patchValue({ cr: 0 });
-         const values: Monster = {
-             ...this.chartStats,
-             points: 0,
-         };
-         this.monsterForm.patchValue(values);
+        const values: Monster = {
+            ...this.chartStats,
+            points: 0,
+        };
+        this.monsterForm.patchValue(values);
     }
 
     get chartStats(): Monster {
         return (
             npcChart.find(
-                (c) => c.cr === this.monsterForm.value.cr + Number(this.monsterForm.value.partialCr),
+                (c) =>
+                    c.cr === this.monsterForm.value.cr + Number(this.monsterForm.value.partialCr),
             ) || {}
         );
     }
 
-    statChange() {
+    statChange(type = '') {
         const chartStats = this.chartStats;
-        const current = this.monsterForm.value;
+        const current = this.monsterForm.getRawValue();
         const hpPoints = (Number(chartStats.hp) - current.hp) / 7.5;
         const acPoints = Number(chartStats.ac) - current.ac;
         const dmgPoints = (Number(chartStats.dmg) - current.dmg) / 3;
         const hitAcPoints =
-            (Number(chartStats.hit) + Number(chartStats.dc) - (current.hit + current.dc)) / 2;
+            (Number(chartStats.hit) +
+                Number(chartStats.spellHit) +
+                Number(chartStats.dc) -
+                (current.hit + current.spellHit + current.dc)) /
+            2;
         const points =
             Math.trunc(hpPoints) +
             Math.trunc(acPoints) +
             Math.trunc(dmgPoints) +
             Math.trunc(hitAcPoints);
+
+        if (type === 'hit' && current.hit !== Number(chartStats.hit)) {
+            this.monsterForm.get('spellHit')?.disable();
+        } else {
+            this.monsterForm.get('spellHit')?.enable();
+        }
+        if (type === 'spellHit' && current.spellHit !== Number(chartStats.spellHit)) {
+            this.monsterForm.get('hit')?.disable();
+        } else {
+            this.monsterForm.get('hit')?.enable();
+        }
         this.monsterForm.patchValue({
             points,
-            spellHit: current.hit - 1,
         });
     }
 }
