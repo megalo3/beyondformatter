@@ -52,10 +52,10 @@ export class Formatter implements OnInit {
 
     get reachText(): string {
         let returnText = '';
-        if (this.attackType === 'Melee') {
+        if (this.attackProximity === 'Melee') {
             returnText += `reach ${this.attackForm.get('reach')?.value} ft.`;
         }
-        if (this.attackType.includes('Ranged')) {
+        if (this.attackProximity.includes('Ranged')) {
             returnText += `range ${this.attackForm.get('range')?.value} ft./${this.attackForm.get('rangeDisadvantage')?.value} ft.`;
         }
         return returnText;
@@ -73,14 +73,16 @@ export class Formatter implements OnInit {
         return this.attackForm.get('name')?.value;
     }
 
-    get attackType(): string {
-        return this.attackForm.get('type')?.value;
+    get attackProximity(): string {
+        return this.attackForm.get('proximity')?.value;
     }
 
     constructor(private fb: FormBuilder) {
         this.attackForm = this.fb.group({
             name: 'Rend',
-            type: 'Melee',
+            proximity: 'Melee',
+            type: 'Weapon',
+
             toHit: 9,
             reach: 5,
             range: 20,
@@ -167,7 +169,7 @@ export class Formatter implements OnInit {
                 item.get('effect')?.value,
             ];
 
-            return `, and the target must make a DC ${dc} ${ability} saving throw, ${effect}`;
+            return `, and the target must succeed on a DC ${dc} ${ability} saving throw, ${effect}`;
         });
         return messages.join('. ');
     }

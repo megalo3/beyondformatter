@@ -3,7 +3,7 @@
         <div class="col">
             <h3>Attack Markup</h3>
             <i
-                ><b>{{ attackName }}.</b> {{ attackType }} Weapon Attack: </i
+                ><b>{{ attackName }}.</b> {{ attackProximity }} {{ attackForm.value.type }} Attack: </i
             >[rollable]+{{ attackForm.value.toHit }};&lcub;"diceNotation":"1d20+{{
                 attackForm.value.toHit
             }}","rollType":"to hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit,
@@ -26,10 +26,19 @@
             </div>
             <div class="col">
                 <mat-form-field>
-                    <mat-label>Attack Type</mat-label>
-                    <mat-select formControlName="type">
+                    <mat-label>Attack Proximity</mat-label>
+                    <mat-select formControlName="proximity">
                         <mat-option value="Melee">Melee</mat-option>
                         <mat-option value="Ranged">Ranged</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Attack Type</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option value="Weapon">Weapon</mat-option>
+                        <mat-option value="Spell">Spell</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -40,7 +49,7 @@
                 </mat-form-field>
             </div>
             <div class="col">
-                @if (attackType === 'Melee') {
+                @if (attackProximity === 'Melee') {
                     <mat-form-field>
                         <mat-label>Reach</mat-label>
                         <input matInput formControlName="reach" type="number" />
@@ -71,11 +80,7 @@
             <button matButton="outlined" (click)="addAttack()">Add</button>
         </h3>
         <ng-container formArrayName="damages">
-            @for (
-                damageGroup of damages.controls;
-                track damageGroup.value.id;
-                let i = $index
-            ) {
+            @for (damageGroup of damages.controls; track damageGroup.value.id; let i = $index) {
                 <ng-container [formGroupName]="i">
                     <div class="row row-cols-auto">
                         <div class="col">
