@@ -3,7 +3,8 @@
         <div class="col">
             <h3>Attack Markup</h3>
             <i
-                ><b>{{ attackName }}.</b> {{ attackProximity }} {{ attackForm.value.type }} Attack: </i
+                ><b>{{ attackName }}.</b> {{ attackProximity }}
+                {{ attackForm.value.type }} Attack: </i
             >[rollable]+{{ attackForm.value.toHit }};&lcub;"diceNotation":"1d20+{{
                 attackForm.value.toHit
             }}","rollType":"to hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit,
@@ -274,7 +275,7 @@
                 <input matInput type="text" [(ngModel)]="monster" />
             </mat-form-field>
         </div>
-        <div class="col">
+        <!-- <div class="col">
             <mat-form-field>
                 <mat-label>Pronoun</mat-label>
                 <mat-select [(ngModel)]="pronoun">
@@ -283,7 +284,7 @@
                     }
                 </mat-select>
             </mat-form-field>
-        </div>
+        </div> -->
         <div class="col">
             <mat-form-field>
                 <mat-label>Challenge Rating</mat-label>
@@ -300,10 +301,34 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="col">
+        <!-- <div class="col">
             <mat-form-field>
                 <mat-label>Ability Score</mat-label>
                 <input matInput type="number" [(ngModel)]="abilityScore" />
+            </mat-form-field>
+        </div> -->
+        <div class="col-12">
+            <mat-form-field style="width: 100%">
+                <mat-label>At Will</mat-label>
+                <textarea matInput [(ngModel)]="spellAtWill" rows="1" cols="53"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="col-12">
+            <mat-form-field style="width: 100%">
+                <mat-label>1/Day Each</mat-label>
+                <textarea matInput [(ngModel)]="spell1day" rows="1" cols="53"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="col-12">
+            <mat-form-field style="width: 100%">
+                <mat-label>2/Day Each</mat-label>
+                <textarea matInput [(ngModel)]="spell2day" rows="1" cols="53"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="col-12">
+            <mat-form-field style="width: 100%">
+                <mat-label>3/Day Each</mat-label>
+                <textarea matInput [(ngModel)]="spell3day" rows="1" cols="53"></textarea>
             </mat-form-field>
         </div>
     </div>
@@ -313,37 +338,24 @@
             <b><i>Spellcasting.</i></b> {{ spellcastingText }}
             <br />
             <br />
-            <b>Cantrips (at will):</b> Spell
-            <br />
-            <br />
-            <b>1st level (4 slots):</b> Spell
-            <br />
-            <br />
-            <b>2nd level (3 slots):</b> Spell
-            <br />
-            <br />
-            <b>3rd level (3 slots):</b> Spell
-            <br />
-            <br />
-            <b>4th level (3 slots):</b> Spell
-            <br />
-            <br />
-            <b>5th level (2 slots):</b> Spell
-            <br />
-            <br />
-            <b>6th level (1 slot):</b> Spell
-            <br />
-            <br />
-            <b>At Will:</b> Spell
-            <br />
-            <br />
-            <b> 1/Day Each:</b> Spell
-            <br />
-            <br />
-            <b> 2/Day Each:</b> Spell
-            <br />
-            <br />
-            <b> 3/Day Each:</b> Spell
+            @if (spellAtWill !== '') {
+                <b>At Will:</b> {{ getMarkupText('spell', spellAtWill) }}
+                <br />
+                <br />
+            }
+            @if (spell1day !== '') {
+                <b> 1/Day Each:</b> {{ getMarkupText('spell', spell1day) }}
+                <br />
+                <br />
+            }
+            @if (spell2day !== '') {
+                <b> 2/Day Each:</b> {{ getMarkupText('spell', spell2day) }}
+                <br />
+                <br />
+            }
+            @if (spell3day !== '') {
+                <b> 3/Day Each:</b> {{ getMarkupText('spell', spell3day) }}
+            }
         </div>
     </div>
 </div>

@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { npcChart } from '../npc-chart';
+import { Monster } from '../app.interface';
 
 @Component({
     selector: 'app-formatter',
@@ -30,7 +31,7 @@ export class Formatter implements OnInit {
     markupForm: FormGroup;
     monster = 'Monster';
     cr = 7;
-    abilityScore = 18;
+    // abilityScore = 18;
     casterClass = 'Wizard';
     classes = [
         'Artificer',
@@ -49,6 +50,10 @@ export class Formatter implements OnInit {
     ];
     pronouns = ['He/him', 'She/her', 'They/them'];
     pronoun = 'They/them';
+    spellAtWill = 'Mage Hand, Prestidigitation';
+    spell1day = '';
+    spell2day = '';
+    spell3day = '';
 
     get reachText(): string {
         let returnText = '';
@@ -193,15 +198,19 @@ export class Formatter implements OnInit {
         this.saves.removeAt(index);
     }
 
+    getMarkupText(type: string, list: string): string {
+        const items = list.split(/\s*,\s*/).filter((item: string) => item.length > 0);
+        return items.length === 0
+            ? ''
+            : `[${type}]` + items.join(`[/${type}], [${type}]`) + `[/${type}]`;
+    }
+
     get markupText(): string {
         const [type, list] = [
             this.markupForm.get('type')?.value,
             this.markupForm.get('list')?.value,
         ];
-        const items = list.split(/\s*,\s*/).filter((item: string) => item.length > 0);
-        return items.length === 0
-            ? ''
-            : `[${type}]` + items.join(`[/${type}], [${type}]`) + `[/${type}]`;
+        return this.getMarkupText(type, list);
     }
 
     getNumberString(n: number): string {
@@ -226,12 +235,16 @@ export class Formatter implements OnInit {
         return Math.floor(calc);
     }
 
+    get chartStats(): Monster {
+        return npcChart.find((c) => c.cr === this.cr) || {};
+    }
+
     get dc(): number {
-        return 10 + this.getProficiency(this.cr) + this.getAbilityMod(this.abilityScore);
+        return this.chartStats.dc || 10;
     }
 
     get spellAttack(): number {
-        return this.dc - 10;
+        return this.chartStats.spellHit || 10;
     }
 
     get pronounPosessive(): string {
@@ -267,6 +280,6 @@ export class Formatter implements OnInit {
     }
 
     get spellcastingText(): string {
-        return `${this.monster} is a ${this.getNumberString(this.getSpellLevelFromCr(this.cr))}-level spellcaster. ${this.pronounPosessive} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.monster} has the following ${this.casterClass} spells prepared:`;
+        return `${this.monster} casts one of the following spells, requiring no Material components and using ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks):`;
     }
 }
