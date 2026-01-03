@@ -1,0 +1,69 @@
+
+
+<div class="section">
+    <h3>Spells</h3>
+    <div class="row row-cols-auto">
+        <div class="col">
+            <p>(max spell level: {{ spellLevelFromCr }}, caster level: {{ casterLevelFromCr }})</p>
+        </div>
+    </div>
+    <form [formGroup]="spellForm">
+        <div class="row row-cols-auto">
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Monster Name</mat-label>
+                    <input matInput type="text" formControlName="monster" />
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Challenge Rating</mat-label>
+                    <input matInput type="number" formControlName="cr" />
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Caster Class</mat-label>
+                    <mat-select formControlName="casterClass">
+                        @for (cl of classes; track cl; let i = $index) {
+                            <mat-option [value]="cl">{{ cl }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Version</mat-label>
+                    <mat-select formControlName="version" (selectionChange)="versionChange()">
+                        <mat-option value="2024">2024</mat-option>
+                        <mat-option value="2014">2014</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <ng-container formArrayName="spells">
+                @for (spellGroup of spells.controls; track spellGroup.value.id; let i = $index) {
+                    <ng-container [formGroupName]="i">
+                        <mat-form-field style="width: 100%">
+                            <mat-label>{{ getSpellLevelLabel(i) }}</mat-label>
+                            <textarea matInput formControlName="list" rows="1" cols="53"></textarea>
+                        </mat-form-field>
+                    </ng-container>
+                }
+            </ng-container>
+        </div>
+    </form>
+
+    <div class="row row-cols-auto">
+        <div class="col">
+            <b><i>Spellcasting.</i></b> {{ spellcastingText }}
+            <br />
+            <br />
+            @for (spellList of spellForm.value.spells; track spellList.id; let i = $index) {
+                <span [ngClass]="{'spell-2024': spellForm.value.version === '2024'}">{{getSpellLevelLabel(i)}}:</span> {{ monsterService.getMarkupText('spell', spellList.list) }}
+                <br />
+                <br />
+            }
+        </div>
+    </div>
+</div>

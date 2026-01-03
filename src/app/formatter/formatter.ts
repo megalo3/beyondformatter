@@ -10,8 +10,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { npcChart } from '../npc-chart';
-import { Monster } from '../app.interface';
+import { SpellsComponent } from '../spells/spells';
+import { MonsterService } from '../monster.service';
 
 @Component({
     selector: 'app-formatter',
@@ -22,6 +22,7 @@ import { Monster } from '../app.interface';
         MatIconModule,
         MatSelectModule,
         MatButtonModule,
+        SpellsComponent,
     ],
     templateUrl: './formatter.html',
     styleUrl: './formatter.scss',
@@ -29,31 +30,7 @@ import { Monster } from '../app.interface';
 export class Formatter implements OnInit {
     attackForm: FormGroup;
     markupForm: FormGroup;
-    monster = 'Monster';
-    cr = 7;
-    // abilityScore = 18;
-    casterClass = 'Wizard';
-    classes = [
-        'Artificer',
-        'Barbarian',
-        'Bard',
-        'Cleric',
-        'Druid',
-        'Fighter',
-        'Monk',
-        'Paladin',
-        'Ranger',
-        'Rogue',
-        'Sorcerer',
-        'Warlock',
-        'Wizard',
-    ];
-    pronouns = ['He/him', 'She/her', 'They/them'];
-    pronoun = 'They/them';
-    spellAtWill = 'Mage Hand, Prestidigitation';
-    spell1day = '';
-    spell2day = '';
-    spell3day = '';
+
 
     get reachText(): string {
         let returnText = '';
@@ -86,7 +63,7 @@ export class Formatter implements OnInit {
         return this.attackForm.get('proximity')?.value;
     }
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder, public monsterService: MonsterService) {
         this.attackForm = this.fb.group({
             name: 'Rend',
             proximity: 'Melee',
@@ -202,32 +179,12 @@ export class Formatter implements OnInit {
         this.saves.removeAt(index);
     }
 
-    getMarkupText(type: string, list: string): string {
-        const items = list.split(/\s*,\s*/).filter((item: string) => item.length > 0);
-        return items.length === 0
-            ? ''
-            : `[${type}]` + items.join(`[/${type}], [${type}]`) + `[/${type}]`;
-    }
-
     get markupText(): string {
         const [type, list] = [
             this.markupForm.get('type')?.value,
             this.markupForm.get('list')?.value,
         ];
-        return this.getMarkupText(type, list);
-    }
-
-    getNumberString(n: number): string {
-        if (!n) {
-            return '0th';
-        }
-        if (n === 1) {
-            return '1st';
-        }
-        if (n === 2) {
-            return '2nd';
-        }
-        return `${n}th`;
+        return this.monsterService.getMarkupText(type, list);
     }
 
     getProficiency(cr: number): number {
@@ -237,56 +194,5 @@ export class Formatter implements OnInit {
     getAbilityMod(n: number): number {
         const calc = (n - 10) / 2;
         return Math.floor(calc);
-    }
-
-    get chartStats(): Monster {
-        return npcChart.find((c) => c.cr === this.cr) || {};
-    }
-
-    get dc(): number {
-        return this.chartStats.dc || 10;
-    }
-
-    get spellAttack(): number {
-        return this.chartStats.spellHit || 10;
-    }
-
-    get pronounPosessive(): string {
-        switch (this.pronoun) {
-            case 'He/him':
-                return 'His';
-            case 'She/her':
-                return 'Hers';
-        }
-        return 'Their';
-    }
-
-    get spellcastingAbility(): string {
-        switch (this.casterClass) {
-            case 'Artificer':
-            case 'Wizard':
-            case 'Warlock':
-                return 'Intelligence';
-            case 'Bard':
-            case 'Paladin':
-            case 'Sorcerer':
-                return 'Charisma';
-            case 'Cleric':
-            case 'Druid':
-            case 'Ranger':
-                return 'Wisdom';
-        }
-        return 'Intelligence';
-    }
-
-    get spellLevelFromCr(): number {
-        return this.chartStats.spellLevel || 1;
-    }
-    get casterLevelFromCr(): number {
-        return this.chartStats.level || 1;
-    }
-
-    get spellcastingText(): string {
-        return `${this.monster} casts one of the following spells, requiring no Material components and using ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks):`;
     }
 }
