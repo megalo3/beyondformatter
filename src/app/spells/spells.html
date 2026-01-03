@@ -1,10 +1,13 @@
-
-
 <div class="section">
     <h3>Spells</h3>
     <div class="row row-cols-auto">
         <div class="col">
-            <p>(max spell level: {{ spellLevelFromCr }}, caster level: {{ casterLevelFromCr }})</p>
+            <p>
+                @if (spellForm.value.version === '2024') {
+                    max spell level: {{ spellLevelFromCr }},
+                }
+                caster level: {{ casterLevelFromCr }}
+            </p>
         </div>
     </div>
     <form [formGroup]="spellForm">
@@ -18,13 +21,13 @@
             <div class="col">
                 <mat-form-field>
                     <mat-label>Challenge Rating</mat-label>
-                    <input matInput type="number" formControlName="cr" />
+                    <input matInput type="number" formControlName="cr" (change)="versionChange()" />
                 </mat-form-field>
             </div>
             <div class="col">
                 <mat-form-field>
                     <mat-label>Caster Class</mat-label>
-                    <mat-select formControlName="casterClass">
+                    <mat-select formControlName="casterClass" (selectionChange)="versionChange()">
                         @for (cl of classes; track cl; let i = $index) {
                             <mat-option [value]="cl">{{ cl }}</mat-option>
                         }
@@ -40,14 +43,33 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            @if (spellForm.value.version === '2014') {
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Pronoun</mat-label>
+                        <mat-select formControlName="pronoun" (selectionChange)="versionChange()">
+                            @for (cl of pronouns; track cl; let i = $index) {
+                                <mat-option [value]="cl">{{ cl }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            }
 
             <ng-container formArrayName="spells">
                 @for (spellGroup of spells.controls; track spellGroup.value.id; let i = $index) {
                     <ng-container [formGroupName]="i">
-                        <mat-form-field style="width: 100%">
-                            <mat-label>{{ getSpellLevelLabel(i) }}</mat-label>
-                            <textarea matInput formControlName="list" rows="1" cols="53"></textarea>
-                        </mat-form-field>
+                        @if (spellForm.value.version === '2024' || spellLevels2014[i] > 0) {
+                            <mat-form-field style="width: 100%">
+                                <mat-label>{{ getSpellLevelLabel(i) }}</mat-label>
+                                <textarea
+                                    matInput
+                                    formControlName="list"
+                                    rows="1"
+                                    cols="53"
+                                ></textarea>
+                            </mat-form-field>
+                        }
                     </ng-container>
                 }
             </ng-container>
@@ -56,13 +78,23 @@
 
     <div class="row row-cols-auto">
         <div class="col">
-            <b><i>Spellcasting.</i></b> {{ spellcastingText }}
+            <b><i>Spellcasting.</i></b>
+            @if (spellForm.value.version === '2024') {
+                {{ spellcastingText }}
+            } @else {
+                {{ spellcastingText2014 }}
+            }
             <br />
             <br />
             @for (spellList of spellForm.value.spells; track spellList.id; let i = $index) {
-                <span [ngClass]="{'spell-2024': spellForm.value.version === '2024'}">{{getSpellLevelLabel(i)}}:</span> {{ monsterService.getMarkupText('spell', spellList.list) }}
-                <br />
-                <br />
+                @if (spellList.list !== '') {
+                    <span [ngClass]="{ 'spell-2024': spellForm.value.version === '2024' }"
+                        >{{ getSpellLevelLabel(i) }}:</span
+                    >
+                    {{ monsterService.getMarkupText('spell', spellList.list) }}
+                    <br />
+                    <br />
+                }
             }
         </div>
     </div>

@@ -49,6 +49,8 @@ export class SpellsComponent {
     ];
     pronouns = ['He/him', 'She/her', 'They/them'];
 
+    spellLevels2014: number[] = [];
+
     get spells(): FormArray {
         return this.spellForm.get('spells') as FormArray;
     }
@@ -97,7 +99,7 @@ export class SpellsComponent {
             case 'He/him':
                 return 'His';
             case 'She/her':
-                return 'Hers';
+                return 'Her';
         }
         return 'Their';
     }
@@ -131,6 +133,10 @@ export class SpellsComponent {
         return `${this.spellForm.value.monster} casts one of the following spells, requiring no Material components and using ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks):`;
     }
 
+    get spellcastingText2014(): string {
+        return `${this.spellForm.value.monster} is a ${this.monsterService.getNumberString(this.casterLevelFromCr)}-level spellcaster. ${this.pronounPosessive} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.spellForm.value.monster} has the following ${this.spellForm.value.casterClass} spells prepared:`;
+    }
+
     getSpellLevelLabel(n: number): string {
         switch (this.spellForm.value.version) {
             case '2024':
@@ -142,8 +148,7 @@ export class SpellsComponent {
                 if (n === 0) {
                     return 'Cantrips (at will)';
                 }
-                return `${this.monsterService.getNumberString(n)} level (# slots)`;
-                break;
+                return `${this.monsterService.getNumberString(n)} level (${this.spellLevels2014[n]} slots)`;
         }
         return '';
     }
@@ -156,6 +161,35 @@ export class SpellsComponent {
         const count = this.spellForm.value.version === '2024' ? 4 : 10;
         this.spells.push(this.#getSpellsArray(count));
 
-        console.log(this.spellForm.value);
+        this.spellLevels2014 = this.get2014SpellLevels();
+    }
+
+    get2014SpellLevels(): number[] {
+        const pure = [...spellChart.pure[this.casterLevelFromCr]];
+        const partial = [...spellChart.partial[this.casterLevelFromCr]];
+
+        switch (this.spellForm.value.casterClass) {
+            case 'Cleric':
+            case 'Wizard':
+                return pure;
+            case 'Bard':
+            case 'Druid':
+                pure[0] = pure[0] - 1;
+                return pure;
+            case 'Sorcerer':
+                pure[0] = pure[0] + 1;
+                return pure;
+            case 'Warlock':
+                return Array.from(Array(this.spellLevelFromCr).keys()).map(() => 5);
+            case 'Artificer':
+                return partial;
+            case 'Paladin':
+            case 'Ranger':
+                partial[0] = 0;
+                return partial;
+            case 'Rogue':
+                return [...spellChart.arcaneTrickster[this.casterLevelFromCr]];
+        }
+        return Array.from(Array(this.casterLevelFromCr).keys()).map(() => 0);
     }
 }
