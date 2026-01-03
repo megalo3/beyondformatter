@@ -58,10 +58,14 @@ export class Formatter implements OnInit {
     get reachText(): string {
         let returnText = '';
         if (this.attackProximity === 'Melee') {
-            returnText += `reach ${this.attackForm.get('reach')?.value} ft.`;
+            returnText += `reach ${this.attackForm.value.reach} ft.`;
         }
         if (this.attackProximity.includes('Ranged')) {
-            returnText += `range ${this.attackForm.get('range')?.value} ft./${this.attackForm.get('rangeDisadvantage')?.value} ft.`;
+            returnText +=
+                `range ${this.attackForm.value.range} ft.` +
+                (this.attackForm.value.rangeDisadvantage
+                    ? `/${this.attackForm.value.rangeDisadvantage} ft.`
+                    : '');
         }
         return returnText;
     }
@@ -275,8 +279,11 @@ export class Formatter implements OnInit {
         return 'Intelligence';
     }
 
-    getSpellLevelFromCr(cr: number): number {
-        return npcChart.find((c) => c.cr === cr)?.spellLevel || 1;
+    get spellLevelFromCr(): number {
+        return this.chartStats.spellLevel || 1;
+    }
+    get casterLevelFromCr(): number {
+        return this.chartStats.level || 1;
     }
 
     get spellcastingText(): string {

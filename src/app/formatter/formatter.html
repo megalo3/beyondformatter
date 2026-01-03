@@ -275,16 +275,6 @@
                 <input matInput type="text" [(ngModel)]="monster" />
             </mat-form-field>
         </div>
-        <!-- <div class="col">
-            <mat-form-field>
-                <mat-label>Pronoun</mat-label>
-                <mat-select [(ngModel)]="pronoun">
-                    @for (pronoun of pronouns; track pronoun; let i = $index) {
-                        <mat-option [value]="pronoun">{{ pronoun }}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        </div> -->
         <div class="col">
             <mat-form-field>
                 <mat-label>Challenge Rating</mat-label>
@@ -301,12 +291,9 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <!-- <div class="col">
-            <mat-form-field>
-                <mat-label>Ability Score</mat-label>
-                <input matInput type="number" [(ngModel)]="abilityScore" />
-            </mat-form-field>
-        </div> -->
+        <div class="col">
+            (max spell level: {{ spellLevelFromCr }}, caster level: {{casterLevelFromCr}})
+        </div>
         <div class="col-12">
             <mat-form-field style="width: 100%">
                 <mat-label>At Will</mat-label>
@@ -315,8 +302,8 @@
         </div>
         <div class="col-12">
             <mat-form-field style="width: 100%">
-                <mat-label>1/Day Each</mat-label>
-                <textarea matInput [(ngModel)]="spell1day" rows="1" cols="53"></textarea>
+                <mat-label>3/Day Each</mat-label>
+                <textarea matInput [(ngModel)]="spell3day" rows="1" cols="53"></textarea>
             </mat-form-field>
         </div>
         <div class="col-12">
@@ -327,8 +314,8 @@
         </div>
         <div class="col-12">
             <mat-form-field style="width: 100%">
-                <mat-label>3/Day Each</mat-label>
-                <textarea matInput [(ngModel)]="spell3day" rows="1" cols="53"></textarea>
+                <mat-label>1/Day Each</mat-label>
+                <textarea matInput [(ngModel)]="spell1day" rows="1" cols="53"></textarea>
             </mat-form-field>
         </div>
     </div>
@@ -343,8 +330,8 @@
                 <br />
                 <br />
             }
-            @if (spell1day !== '') {
-                <b> 1/Day Each:</b> {{ getMarkupText('spell', spell1day) }}
+            @if (spell3day !== '') {
+                <b> 3/Day Each:</b> {{ getMarkupText('spell', spell3day) }}
                 <br />
                 <br />
             }
@@ -353,8 +340,10 @@
                 <br />
                 <br />
             }
-            @if (spell3day !== '') {
-                <b> 3/Day Each:</b> {{ getMarkupText('spell', spell3day) }}
+            @if (spell1day !== '') {
+                <b> 1/Day Each:</b> {{ getMarkupText('spell', spell1day) }}
+                <br />
+                <br />
             }
         </div>
     </div>

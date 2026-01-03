@@ -66,7 +66,7 @@ export const npcChart = [
     },
     {
         cr: 2,
-        level: 4,
+        level: 3,
         proficiency: 2,
         ac: 14,
         hp: 45,
