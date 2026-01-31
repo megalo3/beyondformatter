@@ -13,7 +13,7 @@ import { Monster } from '../app.interface';
 import { NgClass } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MonsterService } from '../monster.service';
-import { spellChart } from "../spell-chart";
+import { spellChart } from '../spell-chart';
 
 @Component({
     selector: 'app-spells',
@@ -69,7 +69,9 @@ export class SpellsComponent {
             spellAtWill: 'Mage Hand, Prestidigitation',
             spells: this.fb.array(this.#getSpellsArray(4)),
         });
-        this.spellForm.get('name')?.valueChanges.subscribe(n => this.monsterService.name.set(n));
+        this.spellForm
+            .get('monster')
+            ?.valueChanges.subscribe((n) => this.monsterService.name.set(n));
     }
 
     #getSpellsArray(n: number): FormGroup[] {
