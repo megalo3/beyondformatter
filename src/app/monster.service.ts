@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Monster } from './app.interface';
 import { npcChart } from './npc-chart';
 
@@ -6,6 +6,8 @@ import { npcChart } from './npc-chart';
     providedIn: 'root',
 })
 export class MonsterService {
+    name = signal('Monster');
+
     getNumberString(n: number): string {
         if (!n) {
             return '0th';

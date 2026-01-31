@@ -69,6 +69,7 @@ export class SpellsComponent {
             spellAtWill: 'Mage Hand, Prestidigitation',
             spells: this.fb.array(this.#getSpellsArray(4)),
         });
+        this.spellForm.get('name')?.valueChanges.subscribe(n => this.monsterService.name.set(n));
     }
 
     #getSpellsArray(n: number): FormGroup[] {
