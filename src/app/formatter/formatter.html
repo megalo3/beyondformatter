@@ -32,15 +32,17 @@
     <div class="row">
         <div class="col">
             <h3>Attack Markup</h3>
-            <i
-                ><b>{{ attackName }}.</b> {{ attackProximity }}
-                {{ attackForm.value.type }} Attack: </i
-            >[rollable]+{{ attackForm.value.toHit }};&lcub;"diceNotation":"1d20+{{
-                attackForm.value.toHit
-            }}","rollType":"to hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit,
-            {{ reachText }}, {{ attackForm.value.targets }}.
-            <i>Hit:</i>
-            {{ damageMessages }}{{ saveMessages }}.
+            <p><b><i>Multiattack.</i></b> {{ monsterService.name() }} makes three attacks with {{ monsterService.posessivePronoun() }} longsword or {{ monsterService.posessivePronoun() }} hand longbow.</p>
+            <p>
+                <i><b>{{ attackName }}.</b> {{ attackProximity }}
+                    {{ attackForm.value.type }} Attack: </i
+                >[rollable]+{{ attackForm.value.toHit }};&lcub;"diceNotation":"1d20+{{
+                    attackForm.value.toHit
+                }}","rollType":"to hit","rollAction":"{{ attackName }}"&rcub;[/rollable] to hit,
+                {{ reachText }}, {{ attackForm.value.targets }}.
+                <i>Hit:</i>
+                {{ damageMessages }}{{ saveMessages }}.
+            </p>
         </div>
     </div>
 </div>
@@ -274,9 +276,8 @@
                         <mat-option value="wprop"
                             >wprop - a property of a weapon - e.g. finesse, versatile and
                             heavy</mat-option
-                        > <mat-option value="rules"
-                            >rules - Advantage, etc</mat-option
                         >
+                        <mat-option value="rules">rules - Advantage, etc</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -320,8 +321,8 @@
         {{ monsterService.verbPlural() === 's' ? 'flies' : 'fly' }} out of an enemy's reach.
     </p>
     <p>
-        <b><i>Magic Resistance.</i></b> The {{ monsterService.name() }} has [rules]advantage[/rules] on saving
-        throws against spells and other magical effects.
+        <b><i>Magic Resistance.</i></b> The {{ monsterService.name() }} has [rules]advantage[/rules]
+        on saving throws against spells and other magical effects.
     </p>
     <p>
         <b><i>Legendary Resistance (3/Day).</i></b> If the {{ monsterService.name() }} fails a
@@ -329,25 +330,24 @@
     </p>
     <p>
         <b><i>Sneak Attack.</i></b> Once per turn, {{ monsterService.name() }} deals an extra 17
-        (5d6) damage when {{ monsterService.subjectPronoun() }} hit{{
-            monsterService.verbPlural()
-        }}
+        (5d6) damage when {{ monsterService.subjectPronoun() }} hit{{ monsterService.verbPlural() }}
         a target with a weapon attack and
-        {{ monsterService.verbPlural() === 's' ? 'has' : 'have' }} [rules]advantage[/rules] on the attack roll, or
-        when the target is within 5 feet of an ally if {{ monsterService.name() }} that isn't
-        incapacitated and {{ monsterService.name() }} doesn't have [rules]disadvantage[/rules] on the attack roll.
+        {{ monsterService.verbPlural() === 's' ? 'has' : 'have' }} [rules]advantage[/rules] on the
+        attack roll, or when the target is within 5 feet of an ally if
+        {{ monsterService.name() }} that isn't incapacitated and {{ monsterService.name() }} doesn't
+        have [rules]disadvantage[/rules] on the attack roll.
     </p>
     <p>
         <b><i>Assassinate.</i></b> During {{ monsterService.posessivePronoun() }} first turn,
-        {{ monsterService.name() }} has [rules]advantage[/rules] on attack rolls against any creature that hasn't
-        taken a turn. Any hit {{ monsterService.name() }} scores against a surprised creature is a
-        critical hit.
+        {{ monsterService.name() }} has [rules]advantage[/rules] on attack rolls against any
+        creature that hasn't taken a turn. Any hit {{ monsterService.name() }} scores against a
+        surprised creature is a critical hit.
     </p>
     <p>
         <b><i>Unholy Aura.</i></b> All creatures within 10 feet of the
-        {{ monsterService.name() }} have [rules]disadvantage[/rules] on Constitution saving throws. Every creature
-        within the unholy aura at the start of the {{ monsterService.name() }}'s turn loses 2d6 hit
-        points, gains a level of Starvation, and the {{ monsterService.name() }}
+        {{ monsterService.name() }} have [rules]disadvantage[/rules] on Constitution saving throws.
+        Every creature within the unholy aura at the start of the {{ monsterService.name() }}'s turn
+        loses 2d6 hit points, gains a level of Starvation, and the {{ monsterService.name() }}
         gains that many hit points.
     </p>
     <p>
@@ -357,10 +357,13 @@
     </p>
     <p>
         <b><i>Heightened Spell (3/Day).</i></b> As a bonus action, a target within 60 feet of
-        {{ monsterService.name() }} has [rules]disadvantage[/rules] on the their next saving throw against
-        {{ monsterService.name() }}'s spell.
+        {{ monsterService.name() }} has [rules]disadvantage[/rules] on the their next saving throw
+        against {{ monsterService.name() }}'s spell.
     </p>
     <p>
-        <b><i>Deadly Aim.</i></b> {{ monsterService.name() }} gives {{ monsterService.objectPronoun() }}self [rules]Advantage[/rules] on the next attack roll {{ monsterService.subjectPronoun() }} make{{ monsterService.verbPlural() }} during the current turn. If that attack hits, the target takes an extra 28 (8d6) Poison damage.
+        <b><i>Deadly Aim.</i></b> {{ monsterService.name() }} gives
+        {{ monsterService.objectPronoun() }}self [rules]Advantage[/rules] on the next attack roll
+        {{ monsterService.subjectPronoun() }} make{{ monsterService.verbPlural() }} during the
+        current turn. If that attack hits, the target takes an extra 28 (8d6) Poison damage.
     </p>
 </div>
