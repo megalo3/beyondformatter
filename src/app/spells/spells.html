@@ -14,12 +14,6 @@
         <div class="row row-cols-auto">
             <div class="col">
                 <mat-form-field>
-                    <mat-label>Monster Name</mat-label>
-                    <input matInput type="text" formControlName="monster" />
-                </mat-form-field>
-            </div>
-            <div class="col">
-                <mat-form-field>
                     <mat-label>Challenge Rating</mat-label>
                     <input matInput type="number" formControlName="cr" (change)="versionChange()" />
                 </mat-form-field>
@@ -43,18 +37,6 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            @if (spellForm.value.version === '2014') {
-                <div class="col">
-                    <mat-form-field>
-                        <mat-label>Pronoun</mat-label>
-                        <mat-select formControlName="pronoun" (selectionChange)="versionChange()">
-                            @for (cl of pronouns; track cl; let i = $index) {
-                                <mat-option [value]="cl">{{ cl }}</mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            }
 
             <ng-container formArrayName="spells">
                 @for (spellGroup of spells.controls; track spellGroup.value.id; let i = $index) {

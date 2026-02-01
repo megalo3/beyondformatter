@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Monster } from './app.interface';
 import { npcChart } from './npc-chart';
 
@@ -7,6 +7,34 @@ import { npcChart } from './npc-chart';
 })
 export class MonsterService {
     name = signal('Monster');
+    pronoun = signal('They/them');
+    pronouns = ['He/him', 'She/her', 'They/them', 'It/it'];
+
+    posessivePronoun = computed(() => {
+        switch (this.pronoun()) {
+            case 'He/him':
+                return 'his';
+            case 'She/her':
+                return 'her';
+            case 'It/it':
+                return 'its';
+        }
+        return 'their';
+    });
+
+    // He, She, They
+    subjectPronoun = computed(() => {
+        return this.pronoun().split('/')[0].toLowerCase();
+    });
+
+    // Him, Her, Them
+    objectPronoun = computed(() => {
+        return this.pronoun().split('/')[1];
+    });
+
+    verbPlural = computed(() => {
+        return this.pronoun() === 'They/them' ? '' : 's';
+    });
 
     getNumberString(n: number): string {
         if (!n) {

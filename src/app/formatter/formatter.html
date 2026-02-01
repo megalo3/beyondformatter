@@ -1,6 +1,36 @@
 <div class="section">
     <div class="row">
         <div class="col">
+            <mat-form-field>
+                <mat-label>Monster Name</mat-label>
+                <input
+                    matInput
+                    type="text"
+                    [ngModel]="monsterService.name()"
+                    (ngModelChange)="monsterService.name.set($event)"
+                />
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field>
+                <mat-label>Pronoun</mat-label>
+                <mat-select
+                    [value]="monsterService.pronoun()"
+                    (selectionChange)="monsterService.pronoun.set($event.value)"
+                >
+                    <!-- versionChange() -->
+                    @for (cl of monsterService.pronouns; track cl; let i = $index) {
+                        <mat-option [value]="cl">{{ cl }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="row">
+        <div class="col">
             <h3>Attack Markup</h3>
             <i
                 ><b>{{ attackName }}.</b> {{ attackProximity }}
@@ -273,43 +303,59 @@
 <div class="section">
     <h3>Common Traits</h3>
     <p>
-        <b><i>Evasion.</i></b> If {{ monsterService.name() }} is subjected to an effect that allows her to make a Dexterity saving throw to take only half damage, she instead takes no damage if she succeed on the saving throw, and only half damage if she fails.
+        <b><i>Evasion.</i></b> If {{ monsterService.name() }} is subjected to an effect that allows
+        {{ monsterService.objectPronoun() }} to make a Dexterity saving throw to take only half
+        damage, {{ monsterService.subjectPronoun() }} instead take{{
+            monsterService.verbPlural()
+        }}
+        no damage if {{ monsterService.subjectPronoun() }} succees on the saving throw, and only
+        half damage if {{ monsterService.subjectPronoun() }} fail{{ monsterService.verbPlural() }}.
     </p>
     <p>
         <b><i>Flyby.</i></b
-        >The {{ monsterService.name() }} doesn't provoke an Opportunity Attack when it flies out of an enemy's reach.
+        >The {{ monsterService.name() }} doesn't provoke an Opportunity Attack when
+        {{ monsterService.subjectPronoun() }}
+        {{ monsterService.verbPlural() === 's' ? 'flies' : 'fly' }} out of an enemy's reach.
     </p>
     <p>
-        <b><i>Magic Resistance.</i></b> The {{ monsterService.name() }} has advantage on saving throws against spells
-        and other magical effects.
+        <b><i>Magic Resistance.</i></b> The {{ monsterService.name() }} has advantage on saving
+        throws against spells and other magical effects.
     </p>
     <p>
-        <b><i>Legendary Resistance (3/Day).</i></b> If the {{ monsterService.name() }} fails a saving throw, it can
-        choose to succeed instead.
+        <b><i>Legendary Resistance (3/Day).</i></b> If the {{ monsterService.name() }} fails a
+        saving throw, {{ monsterService.subjectPronoun() }} can choose to succeed instead.
     </p>
     <p>
-        <b><i>Sneak Attack.</i></b> Once per turn, {{ monsterService.name() }} deals an extra 17 (5d6) damage when it hits
-        a target with a weapon attack and has advantage on the attack roll, or when the target is
-        within 5 feet of an ally of {{ monsterService.name() }} that isn't incapacitated and {{ monsterService.name() }} doesn't have
-        disadvantage on the attack roll.
+        <b><i>Sneak Attack.</i></b> Once per turn, {{ monsterService.name() }} deals an extra 17
+        (5d6) damage when {{ monsterService.subjectPronoun() }} hit{{
+            monsterService.verbPlural()
+        }}
+        a target with a weapon attack and
+        {{ monsterService.verbPlural() === 's' ? 'has' : 'have' }} advantage on the attack roll, or
+        when the target is within 5 feet of an ally if {{ monsterService.name() }} that isn't
+        incapacitated and {{ monsterService.name() }} doesn't have disadvantage on the attack roll.
     </p>
     <p>
-        <b><i>Assassinate.</i></b> During its first turn, {{ monsterService.name() }} has advantage on attack rolls
-        against any creature that hasn't taken a turn. Any hit {{ monsterService.name() }} scores against a surprised
-        creature is a critical hit.
+        <b><i>Assassinate.</i></b> During {{ monsterService.posessivePronoun() }} first turn,
+        {{ monsterService.name() }} has advantage on attack rolls against any creature that hasn't
+        taken a turn. Any hit {{ monsterService.name() }} scores against a surprised creature is a
+        critical hit.
     </p>
     <p>
-        <b><i>Unholy Aura.</i></b> All creatures within 10 feet of the {{ monsterService.name() }} have disadvantage
-        on Constitution saving throws. Every creature within the unholy aura at the start of the
-        {{ monsterService.name() }}'s turn loses 2d6 hit points, gains a level of Starvation, and the {{ monsterService.name() }}
+        <b><i>Unholy Aura.</i></b> All creatures within 10 feet of the
+        {{ monsterService.name() }} have disadvantage on Constitution saving throws. Every creature
+        within the unholy aura at the start of the {{ monsterService.name() }}'s turn loses 2d6 hit
+        points, gains a level of Starvation, and the {{ monsterService.name() }}
         gains that many hit points.
     </p>
     <p>
-        <b><i>Cunning Action.</i></b> On each of her turns, {{ monsterService.name() }} can use a bonus action to
-        take the Dash, Disengage, or Hide action.
+        <b><i>Cunning Action.</i></b> On each of her turns, {{ monsterService.name() }} can use a
+        bonus action to take the [action]Dash[/action], [action]Disengage[/action], or
+        [action]Hide[/action] action.
     </p>
     <p>
-        <b><i>Heightened Spell (3/Day).</i></b> As a bonus action, a target of {{ monsterService.name() }}'s choice within
-        60 feet of him has disadvantage on its saving throw against his next spell.
+        <b><i>Heightened Spell (3/Day).</i></b> As a bonus action, a target within 60 feet of
+        {{ monsterService.name() }} has disadvantage on the their next saving throw against
+        {{ monsterService.name() }}'s spell.
     </p>
 </div>

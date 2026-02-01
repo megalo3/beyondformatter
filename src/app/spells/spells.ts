@@ -47,7 +47,6 @@ export class SpellsComponent {
         'Warlock',
         'Wizard',
     ];
-    pronouns = ['He/him', 'She/her', 'They/them'];
 
     spellLevels2014: number[] = [];
 
@@ -61,17 +60,12 @@ export class SpellsComponent {
     ) {
         this.spellForm = this.fb.group({
             version: '2024',
-            monster: 'Monster',
             cr: 7,
             abilityScore: 18,
             casterClass: 'Wizard',
-            pronoun: 'They/them',
             spellAtWill: 'Mage Hand, Prestidigitation',
             spells: this.fb.array(this.#getSpellsArray(4)),
         });
-        this.spellForm
-            .get('monster')
-            ?.valueChanges.subscribe((n) => this.monsterService.name.set(n));
     }
 
     #getSpellsArray(n: number): FormGroup[] {
@@ -97,15 +91,7 @@ export class SpellsComponent {
         return this.chartStats.spellHit || 10;
     }
 
-    get pronounPosessive(): string {
-        switch (this.spellForm.value.pronoun) {
-            case 'He/him':
-                return 'His';
-            case 'She/her':
-                return 'Her';
-        }
-        return 'Their';
-    }
+
 
     get spellcastingAbility(): string {
         switch (this.spellForm.value.casterClass) {
@@ -133,11 +119,11 @@ export class SpellsComponent {
     }
 
     get spellcastingText(): string {
-        return `${this.spellForm.value.monster} casts one of the following spells, requiring no Material components and using ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks):`;
+        return `${this.monsterService.name()} casts one of the following spells, requiring no Material components and using ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks):`;
     }
 
     get spellcastingText2014(): string {
-        return `${this.spellForm.value.monster} is a ${this.monsterService.getNumberString(this.casterLevelFromCr)}-level spellcaster. ${this.pronounPosessive} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.spellForm.value.monster} has the following ${this.spellForm.value.casterClass} spells prepared:`;
+        return `${this.monsterService.name()} is a ${this.monsterService.getNumberString(this.casterLevelFromCr)}-level spellcaster. ${this.monsterService.posessivePronoun()} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.monsterService.name()} has the following ${this.spellForm.value.casterClass} spells prepared:`;
     }
 
     getSpellLevelLabel(n: number): string {
