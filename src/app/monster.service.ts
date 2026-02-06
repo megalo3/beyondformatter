@@ -6,6 +6,23 @@ import { npcChart } from './npc-chart';
     providedIn: 'root',
 })
 export class MonsterService {
+    // CR
+    cr = signal(10);
+    chartStats = computed<Monster>(() => {
+        return npcChart.find((c) => c.cr === this.cr())!;
+    });
+    damageBonus = computed<number>(() => {
+        return this.chartStats().hit! - this.chartStats().proficiency!;
+    });
+    crList = [
+        { label: '0', value: 0 },
+        { label: '1/8', value: 0.125 },
+        { label: '1/4', value: 0.25 },
+        { label: '1/2', value: 0.5 },
+        ...Array.from(Array(30).keys()).map((k) => ({ label: k + 1, value: k + 1 })),
+    ];
+
+    // Name / Pronouns
     name = signal('Monster');
     pronoun = signal('They/them');
     pronouns = ['He/him', 'She/her', 'They/them', 'It/it'];

@@ -4,20 +4,14 @@
         <div class="col">
             <p>
                 @if (spellForm.value.version === '2024') {
-                    max spell level: {{ spellLevelFromCr }},
+                    max spell level: {{ monsterService.chartStats().spellLevel }},
                 }
-                caster level: {{ casterLevelFromCr }}
+                caster level: {{ casterLevel }}
             </p>
         </div>
     </div>
     <form [formGroup]="spellForm">
         <div class="row row-cols-auto">
-            <div class="col">
-                <mat-form-field>
-                    <mat-label>Challenge Rating</mat-label>
-                    <input matInput type="number" formControlName="cr" (change)="versionChange()" />
-                </mat-form-field>
-            </div>
             <div class="col">
                 <mat-form-field>
                     <mat-label>Caster Class</mat-label>
@@ -41,7 +35,7 @@
             <ng-container formArrayName="spells">
                 @for (spellGroup of spells.controls; track spellGroup.value.id; let i = $index) {
                     <ng-container [formGroupName]="i">
-                        @if (spellForm.value.version === '2024' || spellLevels2014[i] > 0) {
+                        @if (spellForm.value.version === '2024' || spellLevels2014()[i] > 0) {
                             <mat-form-field style="width: 100%">
                                 <mat-label>{{ getSpellLevelLabel(i) }}</mat-label>
                                 <textarea

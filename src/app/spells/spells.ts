@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, effect } from '@angular/core';
 import {
     FormArray,
     FormBuilder,
@@ -9,7 +9,6 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { Monster } from '../app.interface';
 import { NgClass } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MonsterService } from '../monster.service';
@@ -48,8 +47,6 @@ export class SpellsComponent {
         'Wizard',
     ];
 
-    spellLevels2014: number[] = [];
-
     get spells(): FormArray {
         return this.spellForm.get('spells') as FormArray;
     }
@@ -60,11 +57,14 @@ export class SpellsComponent {
     ) {
         this.spellForm = this.fb.group({
             version: '2024',
-            cr: 7,
             abilityScore: 18,
             casterClass: 'Wizard',
             spellAtWill: 'Mage Hand, Prestidigitation',
             spells: this.fb.array(this.#getSpellsArray(4)),
+        });
+        effect(() => {
+            console.log(`Challenge Rating changed to  ${this.monsterService.cr()}`);
+            this.versionChange();
         });
     }
 
@@ -79,19 +79,13 @@ export class SpellsComponent {
         ];
     }
 
-    get chartStats(): Monster {
-        return this.monsterService.getChartStats(this.spellForm.value.cr);
-    }
-
     get dc(): number {
-        return this.chartStats.dc || 10;
+        return this.monsterService.chartStats().dc!;
     }
 
     get spellAttack(): number {
-        return this.chartStats.spellHit || 10;
+        return this.monsterService.chartStats().spellHit!;
     }
-
-
 
     get spellcastingAbility(): string {
         switch (this.spellForm.value.casterClass) {
@@ -111,11 +105,8 @@ export class SpellsComponent {
         return 'Intelligence';
     }
 
-    get spellLevelFromCr(): number {
-        return this.chartStats.spellLevel || 1;
-    }
-    get casterLevelFromCr(): number {
-        return this.chartStats.level || 1;
+    get casterLevel(): number {
+        return this.monsterService.chartStats().level!;
     }
 
     get spellcastingText(): string {
@@ -123,7 +114,7 @@ export class SpellsComponent {
     }
 
     get spellcastingText2014(): string {
-        return `${this.monsterService.name()} is a ${this.monsterService.getNumberString(this.casterLevelFromCr)}-level spellcaster. ${this.monsterService.posessivePronoun()} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.monsterService.name()} has the following ${this.spellForm.value.casterClass} spells prepared:`;
+        return `${this.monsterService.name()} is a ${this.monsterService.getNumberString(this.casterLevel)}-level spellcaster. ${this.monsterService.posessivePronoun()} spellcasting ability is ${this.spellcastingAbility} (spell save DC ${this.dc}, [rollable]+${this.spellAttack};{"diceNotation":"1d20+${this.spellAttack}","rollType":"to hit","rollAction":"Spellcasting"}[/rollable] to hit with spell attacks). ${this.monsterService.name()} has the following ${this.spellForm.value.casterClass} spells prepared:`;
     }
 
     getSpellLevelLabel(n: number): string {
@@ -137,7 +128,7 @@ export class SpellsComponent {
                 if (n === 0) {
                     return 'Cantrips (at will)';
                 }
-                return `${this.monsterService.getNumberString(n)} level (${this.spellLevels2014[n]} slots)`;
+                return `${this.monsterService.getNumberString(n)} level (${this.spellLevels2014()[n]} slots)`;
         }
         return '';
     }
@@ -146,16 +137,14 @@ export class SpellsComponent {
         while (this.spells.length !== 0) {
             this.spells.removeAt(0);
         }
-
         const count = this.spellForm.value.version === '2024' ? 4 : 10;
         this.spells.push(this.#getSpellsArray(count));
-
-        this.spellLevels2014 = this.get2014SpellLevels();
     }
 
-    get2014SpellLevels(): number[] {
-        const pure = [...spellChart.pure[this.casterLevelFromCr]];
-        const partial = [...spellChart.partial[this.casterLevelFromCr]];
+    spellLevels2014 = computed<number[]>(() => {
+        const casterLevel = this.monsterService.chartStats().level!;
+        const pure = [...spellChart.pure[casterLevel]];
+        const partial = [...spellChart.partial[casterLevel]];
 
         switch (this.spellForm.value.casterClass) {
             case 'Cleric':
@@ -169,7 +158,9 @@ export class SpellsComponent {
                 pure[0] = pure[0] + 1;
                 return pure;
             case 'Warlock':
-                return Array.from(Array(this.spellLevelFromCr).keys()).map(() => 5);
+                return Array.from(Array(this.monsterService.chartStats().spellLevel).keys()).map(
+                    () => 5,
+                );
             case 'Artificer':
                 return partial;
             case 'Paladin':
@@ -177,8 +168,8 @@ export class SpellsComponent {
                 partial[0] = 0;
                 return partial;
             case 'Rogue':
-                return [...spellChart.arcaneTrickster[this.casterLevelFromCr]];
+                return [...spellChart.arcaneTrickster[casterLevel]];
         }
-        return Array.from(Array(this.casterLevelFromCr).keys()).map(() => 0);
-    }
+        return Array.from(Array(casterLevel).keys()).map(() => 0);
+    });
 }

@@ -31,7 +31,6 @@ export class Formatter implements OnInit {
     attackForm: FormGroup;
     markupForm: FormGroup;
 
-
     get reachText(): string {
         let returnText = '';
         if (this.attackProximity === 'Melee') {
@@ -63,7 +62,10 @@ export class Formatter implements OnInit {
         return this.attackForm.get('proximity')?.value;
     }
 
-    constructor(private fb: FormBuilder, public monsterService: MonsterService) {
+    constructor(
+        private fb: FormBuilder,
+        public monsterService: MonsterService,
+    ) {
         this.attackForm = this.fb.group({
             name: 'Rend',
             proximity: 'Melee',
@@ -94,6 +96,14 @@ export class Formatter implements OnInit {
     }
 
     ngOnInit(): void {}
+
+    crChange(cr: number) {
+        this.monsterService.cr.set(cr);
+        this.attackForm.patchValue({
+            toHit: this.monsterService.chartStats().hit
+        });
+        this.damages.at(0).get('bonus')?.setValue(this.monsterService.damageBonus());
+    }
 
     addAttack() {
         this.damages.push(
@@ -173,7 +183,7 @@ export class Formatter implements OnInit {
         this.saves.push(
             this.fb.group({
                 id: crypto.randomUUID(),
-                dc: 10,
+                dc: this.monsterService.chartStats().dc,
                 ability: 'Constitution',
                 effect: 'taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one.',
             }),
