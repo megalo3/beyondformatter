@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { SpellsComponent } from '../spells/spells';
 import { MonsterService } from '../monster.service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
     selector: 'app-formatter',
@@ -23,6 +24,7 @@ import { MonsterService } from '../monster.service';
         MatSelectModule,
         MatButtonModule,
         SpellsComponent,
+        MatSlideToggleModule
     ],
     templateUrl: './formatter.html',
     styleUrl: './formatter.scss',
@@ -48,6 +50,8 @@ export class Formatter {
         const calculatedHp = this.hitDiceAmount() * hitDiceModifier;
         return Math.trunc(this.hitpoints() - calculatedHp);
     });
+
+    properNoun = false;
 
     get reachText(): string {
         let returnText = '';
