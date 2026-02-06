@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, effect, OnInit, signal } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import {
     FormArray,
@@ -27,9 +27,27 @@ import { MonsterService } from '../monster.service';
     templateUrl: './formatter.html',
     styleUrl: './formatter.scss',
 })
-export class Formatter implements OnInit {
+export class Formatter {
     attackForm: FormGroup;
     markupForm: FormGroup;
+    hitDiceType = signal<number>(8);
+    hideDiceTypeChange(n: number) {
+        this.hitDiceType.set(n);
+    }
+    hitpoints = signal<number>(165);
+    hitpointsChange(n: number) {
+        this.hitpoints.set(n);
+    }
+    hitDiceAmount = signal<number>(5);
+    hitDiceAmountChange(n: number) {
+        this.hitDiceAmount.set(n);
+    }
+
+    hitpointsModifier = computed<number>(() => {
+        const hitDiceModifier = (this.hitDiceType() + 1) / 2;
+        const calculatedHp = this.hitDiceAmount() * hitDiceModifier;
+        return Math.trunc(this.hitpoints() - calculatedHp);
+    });
 
     get reachText(): string {
         let returnText = '';
@@ -93,14 +111,18 @@ export class Formatter implements OnInit {
             type: 'spell',
             list: 'Mage Hand, Prestidigitation',
         });
-    }
 
-    ngOnInit(): void {}
+        effect(() => {
+            console.log(`Challenge Rating changed to  ${this.monsterService.cr()}`);
+            this.hitpoints.set(this.monsterService.chartStats().hp!);
+            this.hitDiceAmount.set(this.monsterService.cr() * 2);
+        });
+    }
 
     crChange(cr: number) {
         this.monsterService.cr.set(cr);
         this.attackForm.patchValue({
-            toHit: this.monsterService.chartStats().hit
+            toHit: this.monsterService.chartStats().hit,
         });
         this.damages.at(0).get('bonus')?.setValue(this.monsterService.damageBonus());
     }
