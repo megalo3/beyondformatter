@@ -74,6 +74,7 @@ export class Formatter implements OnInit {
             range: 20,
             rangeDisadvantage: 60,
             targets: 'one target',
+            numberOfAttacks: 2,
             damages: this.fb.array([
                 this.fb.group({
                     id: crypto.randomUUID(),
@@ -116,6 +117,10 @@ export class Formatter implements OnInit {
                 ) + accumulator
             );
         }, 0);
+    }
+
+    get totalAttackDamage(): number {
+        return this.damagePerAttack * Number(this.attackForm.get('numberOfAttacks')?.value);
     }
 
     getDamageAverage(amount: number, die: number, bonus = 0): number {

@@ -32,9 +32,14 @@
     <div class="row">
         <div class="col">
             <h3>Attack Markup</h3>
-            <p><b><i>Multiattack.</i></b> {{ monsterService.name() }} makes three attacks with {{ monsterService.posessivePronoun() }} longsword or {{ monsterService.posessivePronoun() }} hand longbow.</p>
             <p>
-                <i><b>{{ attackName }}.</b> {{ attackProximity }}
+                <b><i>Multiattack.</i></b> {{ monsterService.name() }} makes three attacks with
+                {{ monsterService.posessivePronoun() }} longsword or
+                {{ monsterService.posessivePronoun() }} hand longbow.
+            </p>
+            <p>
+                <i
+                    ><b>{{ attackName }}.</b> {{ attackProximity }}
                     {{ attackForm.value.type }} Attack: </i
                 >[rollable]+{{ attackForm.value.toHit }};&lcub;"diceNotation":"1d20+{{
                     attackForm.value.toHit
@@ -109,9 +114,15 @@
     </div>
     <div class="section">
         <h3>
-            Damage ({{ damagePerAttack }} per attack)
+            Damage ({{ damagePerAttack }} per attack, {{ totalAttackDamage }} total)
             <button matButton="outlined" (click)="addAttack()">Add</button>
         </h3>
+        <div>
+            <mat-form-field>
+                <mat-label>Number of Attacks</mat-label>
+                <input matInput formControlName="numberOfAttacks" type="number" />
+            </mat-form-field>
+        </div>
         <ng-container formArrayName="damages">
             @for (damageGroup of damages.controls; track damageGroup.value.id; let i = $index) {
                 <ng-container [formGroupName]="i">
