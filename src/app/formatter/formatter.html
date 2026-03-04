@@ -12,7 +12,11 @@
             </mat-form-field>
         </div>
         <div class="col">
-            <mat-slide-toggle [(ngModel)]="properNoun">Proper Noun</mat-slide-toggle>
+            <mat-slide-toggle
+                [ngModel]="monsterService.properNoun()"
+                (ngModelChange)="monsterService.properNoun.set($event)"
+                >Proper Noun</mat-slide-toggle
+            >
         </div>
         <div class="col">
             <mat-form-field>
@@ -464,64 +468,106 @@
 <div class="section">
     <h3>Common Traits</h3>
     <p>
-        <b><i>Evasion.</i></b> If {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} is
-        subjected to an effect that allows {{ monsterService.objectPronoun() }} to make a Dexterity
-        saving throw to take only half damage, {{ monsterService.subjectPronoun() }} instead take{{
+        <b><i>Evasion.</i></b> If {{ monsterService.fullName() }} is subjected to an effect that
+        allows {{ monsterService.objectPronoun() }} to make a Dexterity saving throw to take only
+        half damage, {{ monsterService.subjectPronoun() }} instead take{{
             monsterService.verbPlural()
         }}
         no damage if {{ monsterService.subjectPronoun() }} succees on the saving throw, and only
         half damage if {{ monsterService.subjectPronoun() }} fail{{ monsterService.verbPlural() }}.
     </p>
     <p>
-        <b><i>Flyby.</i></b
-        >{{ properNoun ? '' : 'The ' }}{{ monsterService.name() }} doesn't provoke an Opportunity Attack when
+        <b><i>Flyby.</i></b> {{ monsterService.fullNameCapitalized() }} doesn't provoke an
+        Opportunity Attack when
         {{ monsterService.subjectPronoun() }}
         {{ monsterService.verbPlural() === 's' ? 'flies' : 'fly' }} out of an enemy's reach.
     </p>
     <p>
-        <b><i>Magic Resistance.</i></b> {{ properNoun ? '' : 'The ' }}{{ monsterService.name() }} has [rules]advantage[/rules]
-        on saving throws against spells and other magical effects.
+        <b><i>Magic Resistance.</i></b> {{ monsterService.fullNameCapitalized() }} has
+        [rules]advantage[/rules] on saving throws against spells and other magical effects.
     </p>
     <p>
-        <b><i>Legendary Resistance (3/Day).</i></b> If {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} fails a
+        <b><i>Legendary Resistance (3/Day).</i></b> If {{ monsterService.fullName() }} fails a
         saving throw, {{ monsterService.subjectPronoun() }} can choose to succeed instead.
     </p>
     <p>
-        <b><i>Sneak Attack.</i></b> Once per turn, {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} deals an extra 17
+        <b><i>Sneak Attack.</i></b> Once per turn, {{ monsterService.fullName() }} deals an extra 17
         (5d6) damage when {{ monsterService.subjectPronoun() }} hit{{ monsterService.verbPlural() }}
         a target with a weapon attack and
         {{ monsterService.verbPlural() === 's' ? 'has' : 'have' }} [rules]advantage[/rules] on the
         attack roll, or when the target is within 5 feet of an ally if
-        {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} that isn't incapacitated and {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} doesn't
-        have [rules]disadvantage[/rules] on the attack roll.
+        {{ monsterService.fullName() }} that isn't incapacitated and
+        {{ monsterService.fullName() }} doesn't have [rules]disadvantage[/rules] on the attack roll.
     </p>
     <p>
         <b><i>Assassinate.</i></b> During {{ monsterService.posessivePronoun() }} first turn,
-        {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} has [rules]advantage[/rules] on attack rolls against any
-        creature that hasn't taken a turn. Any hit {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} scores against a
-        surprised creature is a critical hit.
+        {{ monsterService.fullNameCapitalized() }} has [rules]advantage[/rules] on attack rolls
+        against any creature that hasn't taken a turn. Any hit
+        {{ monsterService.fullNameCapitalized() }} scores against a surprised creature is a critical
+        hit.
     </p>
     <p>
-        <b><i>Unholy Aura.</i></b> All creatures within 10 feet of {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} have [rules]disadvantage[/rules] on Constitution saving throws.
-        Every creature within the unholy aura at the start of {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }}'s turn
-        loses 2d6 hit points, gains a level of Starvation, and {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }}
+        <b><i>Unholy Aura.</i></b> All creatures within 10 feet of
+        {{ monsterService.fullName() }} have [rules]disadvantage[/rules] on Constitution saving
+        throws. Every creature within the unholy aura at the start of
+        {{ monsterService.fullName() }}'s turn loses 2d6 hit points, gains a level of Starvation,
+        and
+        {{ monsterService.fullNameCapitalized() }}
         gains that many hit points.
     </p>
     <p>
-        <b><i>Cunning Action.</i></b> On each of her turns, {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} can use a
-        bonus action to take the [action]Dash[/action], [action]Disengage[/action], or
+        <b><i>Cunning Action.</i></b> On each of her turns, {{ monsterService.fullName() }} can use
+        a bonus action to take the [action]Dash[/action], [action]Disengage[/action], or
         [action]Hide[/action] action.
     </p>
     <p>
         <b><i>Heightened Spell (3/Day).</i></b> As a bonus action, a target within 60 feet of
-        {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }} has [rules]disadvantage[/rules] on the their next saving throw
-        against {{ properNoun ? '' : 'the ' }}{{ monsterService.name() }}'s spell.
+        {{ monsterService.fullNameCapitalized() }} has [rules]disadvantage[/rules] on the their next
+        saving throw against {{ monsterService.fullName() }}'s spell.
     </p>
     <p>
-        <b><i>Deadly Aim.</i></b> {{ properNoun ? '' : 'The ' }}{{ monsterService.name() }} gives
+        <b><i>Deadly Aim.</i></b> {{ monsterService.fullNameCapitalized() }} gives
         {{ monsterService.objectPronoun() }}self [rules]Advantage[/rules] on the next attack roll
         {{ monsterService.subjectPronoun() }} make{{ monsterService.verbPlural() }}
         during the current turn. If that attack hits, the target takes an extra 28 (8d6) Poison
         damage.
     </p>
+    <p>
+        <b><i>Undead Fortitude.</i></b> If damage reduces {{ monsterService.fullName() }} to 0 hit
+        points, {{ monsterService.subjectPronoun() }} must make a Constitution saving throw with a
+        DC of 5 + the damage taken, unless the damage is radiant, from a silvered weapon, or from a
+        critical hit. On a success, {{ monsterService.fullNameCapitalized() }} drops to 1 hit point
+        instead.
+    </p>
+    <p>
+        <b><i>Fire Breath (Recharge 5–6).</i></b> <i>Dexterity Saving Throw: DC 21,</i> each
+        creature in a 60-foot Cone. Failure: 59 (17d6) Fire damagee. <i>Success:</i> Half damage.
+    </p>
+</div>
+
+<div class="section">
+    <h3>Legendary Actions</h3>
+    <p>
+        {{ monsterService.fullNameCapitalized() }} can take 3 legendary actions, choosing from the
+        options below. Only one legendary action option can be used at a time and only at the end of
+        another creature's turn. {{ monsterService.fullNameCapitalized() }} regains spent legendary
+        actions at the start of {{ monsterService.posessivePronoun() }} turn.
+    </p>
+    <p><b>Attack.</b> {{ monsterService.fullNameCapitalized() }} makes one weapon attack.</p>
+    <p>
+        <b>Warlord’s Command (Costs 2 Actions).</b>
+        {{ monsterService.fullNameCapitalized() }} targets up to two allies that he can see within
+        30 feet of him. If a target can see and hear him, the target can make one weapon attack as a
+        reaction and gains advantage on the attack roll.
+    </p>
+    <p><b>Ten Steps Ahead.</b> {{ monsterService.fullNameCapitalized() }} uses the dash action.</p>
+    <p>
+        <b>Cast a Spell (Costs 2 Actions).</b> {{ monsterService.fullNameCapitalized() }} casts a
+        spell from its list of innate spells, consuming a use of the spell as normal.
+    </p>
+    <p>
+        <b>Rush Attack.</b> {{ monsterService.fullNameCapitalized() }} may move up to 10 feet
+        without provoking opportunity attacks and makes one attack.
+    </p>
+    <p><b>Beguile. </b> {{ monsterService.fullNameCapitalized() }} casts [spells]Command[/spells], requiring no spell components and using Charisma as the spellcasting ability (spell save DC 17). The vampire can’t take this action again until the start of its next turn.</p>
 </div>

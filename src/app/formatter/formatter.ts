@@ -51,7 +51,6 @@ export class Formatter {
         return Math.trunc(this.hitpoints() - calculatedHp);
     });
 
-    properNoun = false;
 
     get reachText(): string {
         let returnText = '';

@@ -24,6 +24,14 @@ export class MonsterService {
 
     // Name / Pronouns
     name = signal('Monster');
+    fullName = computed(() => {
+        return `${this.properNoun() ? '' : 'the '}${this.name()}`;
+    });
+    fullNameCapitalized = computed(() => {
+        return this.fullName().charAt(0).toUpperCase() + this.fullName().slice(1);
+    });
+
+    properNoun = signal(false);
     pronoun = signal('They/them');
     pronouns = ['He/him', 'She/her', 'They/them', 'It/it'];
 
