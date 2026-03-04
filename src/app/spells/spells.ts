@@ -142,7 +142,7 @@ export class SpellsComponent {
     }
 
     spellLevels2014 = computed<number[]>(() => {
-        const casterLevel = this.monsterService.chartStats().level!;
+        const casterLevel = Math.min(this.monsterService.chartStats().level!, 20) - 1;
         const pure = [...spellChart.pure[casterLevel]];
         const partial = [...spellChart.partial[casterLevel]];
 
