@@ -111,7 +111,7 @@ export class Formatter {
         });
 
         this.markupForm = this.fb.group({
-            type: 'spell',
+            type: 'spells',
             list: 'Mage Hand, Prestidigitation',
         });
 
