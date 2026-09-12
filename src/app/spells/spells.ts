@@ -1,4 +1,4 @@
-import { Component, computed, effect } from '@angular/core';
+import { Component, computed, effect, ChangeDetectionStrategy } from '@angular/core';
 import {
     FormArray,
     FormBuilder,
@@ -26,6 +26,7 @@ import { spellChart } from '../spell-chart';
         NgClass,
     ],
     templateUrl: './spells.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './spells.scss',
 })
 export class SpellsComponent {

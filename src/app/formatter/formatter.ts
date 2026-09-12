@@ -1,4 +1,11 @@
-import { Component, computed, effect, OnInit, signal } from '@angular/core';
+import {
+    Component,
+    computed,
+    effect,
+    OnInit,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import {
     FormArray,
@@ -24,9 +31,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         MatSelectModule,
         MatButtonModule,
         SpellsComponent,
-        MatSlideToggleModule
+        MatSlideToggleModule,
     ],
     templateUrl: './formatter.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './formatter.scss',
 })
 export class Formatter {
@@ -50,7 +58,6 @@ export class Formatter {
         const calculatedHp = this.hitDiceAmount() * hitDiceModifier;
         return Math.trunc(this.hitpoints() - calculatedHp);
     });
-
 
     get reachText(): string {
         let returnText = '';

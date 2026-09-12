@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Menu } from './menu/menu';
 
@@ -6,6 +6,7 @@ import { Menu } from './menu/menu';
     selector: 'app-root',
     imports: [RouterOutlet, Menu],
     templateUrl: './app.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './app.scss',
 })
 export class App {

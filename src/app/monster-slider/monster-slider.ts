@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, Optional, SkipSelf } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    Optional,
+    SkipSelf,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     ControlContainer,
     FormBuilder,
@@ -14,6 +21,7 @@ import { MatSliderModule } from '@angular/material/slider';
     selector: 'app-monster-slider',
     imports: [ReactiveFormsModule, FormsModule, MatSliderModule, MatInputModule],
     templateUrl: './monster-slider.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './monster-slider.scss',
 })
 export class MonsterSlider implements OnInit {

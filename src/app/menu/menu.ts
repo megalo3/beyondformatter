@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-menu',
-  imports: [RouterModule, MatButtonModule],
-  templateUrl: './menu.html',
-  styleUrl: './menu.scss',
+    selector: 'app-menu',
+    imports: [RouterModule, MatButtonModule],
+    templateUrl: './menu.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './menu.scss',
 })
-export class Menu {
-
-}
+export class Menu {}
